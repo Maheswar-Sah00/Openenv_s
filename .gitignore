@@ -16,3 +16,6 @@ build/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local Hugging Face Space clone (nested repo) — never commit into this project
+my-env/
