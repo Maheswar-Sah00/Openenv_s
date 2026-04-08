@@ -2,10 +2,10 @@
 """
 Scaler Meta PyTorch / OpenEnv Round 1 — root inference.py.
 
-MANDATORY for --agent llm (OpenAI client + these env vars):
-  API_BASE_URL   LLM base URL (e.g. Hugging Face router OpenAI-compatible endpoint).
+MANDATORY for --agent llm (OpenAI client + env vars from the judge / LiteLLM proxy):
+  API_BASE_URL   Injected proxy base URL (do not hardcode another provider in eval).
+  API_KEY        Injected key for the proxy (preferred). HF_TOKEN also accepted for local dev.
   MODEL_NAME     Model id for chat completions.
-  HF_TOKEN       API key (or API_KEY).
 
 Stdout (per episode), field order must match organizer sample:
   [START] task=<task_name> env=<benchmark> model=<model_name>
@@ -46,7 +46,16 @@ from tasks.medium_task import MAX_STEPS as MEDIUM_MAX
 # --- Config (env + argparse) ---
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
-API_KEY = os.getenv("HF_TOKEN") or os.getenv("API_KEY") or ""
+# Judge injects API_KEY; HF_TOKEN for local Hugging Face router — API_KEY first for proxy billing.
+API_KEY = os.getenv("API_KEY") or os.getenv("HF_TOKEN") or ""
+
+
+def _default_agent_arg() -> str:
+    """Use LLM when keys exist (Phase 2 proxy observes API calls); else baseline for local smoke."""
+    a = os.getenv("SCAM_ENV_AGENT")
+    if a in ("llm", "baseline"):
+        return a
+    return "llm" if (os.getenv("API_KEY") or os.getenv("HF_TOKEN")) else "baseline"
 BENCHMARK = os.getenv("BENCHMARK", "scam-detection-env")
 LOCAL_IMAGE_NAME = os.getenv("LOCAL_IMAGE_NAME") or os.getenv("IMAGE_NAME") or ""
 SUCCESS_SCORE_THRESHOLD = float(os.getenv("SUCCESS_SCORE_THRESHOLD", "0.8"))
@@ -305,8 +314,8 @@ def main() -> None:
     parser.add_argument(
         "--agent",
         choices=["llm", "baseline"],
-        default=os.getenv("SCAM_ENV_AGENT", "baseline"),
-        help="Official eval: --agent llm with HF_TOKEN, API_BASE_URL, MODEL_NAME",
+        default=_default_agent_arg(),
+        help="llm uses OpenAI client + API_BASE_URL/API_KEY (default llm if API_KEY or HF_TOKEN set)",
     )
     args = parser.parse_args()
 
@@ -318,10 +327,12 @@ def main() -> None:
         except ImportError as e:
             print("Install openai: pip install openai", file=sys.stderr)
             raise SystemExit(1) from e
-        if not API_KEY:
-            print("HF_TOKEN or API_KEY required for --agent llm", file=sys.stderr)
+        api_key = os.getenv("API_KEY") or os.getenv("HF_TOKEN") or ""
+        if not api_key:
+            print("API_KEY or HF_TOKEN required for --agent llm", file=sys.stderr)
             raise SystemExit(1)
-        client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
+        base_url = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
+        client = OpenAI(base_url=base_url, api_key=api_key)
 
     if LOCAL_IMAGE_NAME:
         print(f"[DEBUG] LOCAL_IMAGE_NAME={LOCAL_IMAGE_NAME} (not used; in-process ScamEnv)", file=sys.stderr)
