@@ -36,6 +36,12 @@ app = create_app(
 )
 
 
+@app.get("/")
+def root() -> dict[str, object]:
+    """Spaces / browsers may request `/`; OpenEnv API is under /reset, /step, /state, /docs."""
+    return {"ok": True, "env": "scam-detection-env", "docs": "/docs"}
+
+
 def main() -> None:
     import uvicorn
 
