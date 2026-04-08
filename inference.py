@@ -130,6 +130,9 @@ SYSTEM_PROMPT_JSON = textwrap.dedent(
     """
 ).strip()
 
+_JSON_USER_HINT = 'Return only JSON: {"action": "..."}'
+_PLAIN_USER_HINT = "Choose the next action (one token from the allowed list)."
+
 
 def _llm_cache_key(observation: dict[str, Any], trace: list[str]) -> str:
     blob = json.dumps(observation, sort_keys=True, ensure_ascii=False) + "\n" + json.dumps(trace)
@@ -158,13 +161,14 @@ def get_llm_action(client: Any, observation: dict[str, Any], trace: list[str]) -
             return hit
 
     system = SYSTEM_PROMPT_JSON if json_mode else SYSTEM_PROMPT
+    hint = _JSON_USER_HINT if json_mode else _PLAIN_USER_HINT
     user = textwrap.dedent(
         f"""
         Current observation (JSON):
         {json.dumps(observation, ensure_ascii=False)}
 
         Actions taken so far: {trace!r}
-        {"Return only JSON: {\"action\": \"...\"}" if json_mode else "Choose the next action (one token from the allowed list)."}
+        {hint}
         """
     ).strip()
 
