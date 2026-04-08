@@ -6,7 +6,7 @@ colorTo: red
 sdk: docker
 app_port: 7860
 pinned: false
-short_description: OpenEnv-style FastAPI env for fraud analyst simulation (POST /reset, /step, /state).
+short_description: OpenEnv FastAPI server for fraud analyst simulation.
 tags:
   - openenv
   - fraud-detection
