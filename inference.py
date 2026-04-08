@@ -102,10 +102,10 @@ def parse_action_from_model_text(text: str) -> str:
 
 
 SYSTEM_PROMPT = textwrap.dedent(
-    f"""
+    """
     You are a bank fraud analyst agent in a simulation. You receive a JSON observation each turn.
     You must output exactly one action from this list (plain text, no JSON, no quotes):
-    {", ".join(ALLOWED_ACTIONS)}
+    {actions}
 
     Rules of thumb:
     - Terminal actions end the episode: ignore, flag_scam, block_sender, escalate_to_bank.
@@ -115,20 +115,20 @@ SYSTEM_PROMPT = textwrap.dedent(
 
     Reply with exactly one line: the action name only.
     """
-).strip()
+).strip().format(actions=", ".join(ALLOWED_ACTIONS))
 
 SYSTEM_PROMPT_JSON = textwrap.dedent(
-    f"""
+    """
     You are a bank fraud analyst agent in a simulation. You receive a JSON observation each turn.
     Respond with a single JSON object only, no markdown, no extra keys:
     {{"action": "<one_of_allowed>"}}
-    where <one_of_allowed> is exactly one of: {", ".join(ALLOWED_ACTIONS)}
+    where <one_of_allowed> is exactly one of: {actions}
 
     Rules of thumb:
     - Terminal actions end the episode: ignore, flag_scam, block_sender, escalate_to_bank.
     - verify_sender and warn_user are non-terminal when you need more certainty.
     """
-).strip()
+).strip().format(actions=", ".join(ALLOWED_ACTIONS))
 
 _JSON_USER_HINT = 'Return only JSON: {"action": "..."}'
 _PLAIN_USER_HINT = "Choose the next action (one token from the allowed list)."
@@ -162,15 +162,17 @@ def get_llm_action(client: Any, observation: dict[str, Any], trace: list[str]) -
 
     system = SYSTEM_PROMPT_JSON if json_mode else SYSTEM_PROMPT
     hint = _JSON_USER_HINT if json_mode else _PLAIN_USER_HINT
+    obs_json = json.dumps(observation, ensure_ascii=False)
+    trace_repr = repr(trace)
     user = textwrap.dedent(
-        f"""
+        """
         Current observation (JSON):
-        {json.dumps(observation, ensure_ascii=False)}
+        {obs}
 
-        Actions taken so far: {trace!r}
+        Actions taken so far: {tr}
         {hint}
         """
-    ).strip()
+    ).format(obs=obs_json, tr=trace_repr, hint=hint).strip()
 
     kwargs: dict[str, Any] = dict(
         model=MODEL_NAME,
