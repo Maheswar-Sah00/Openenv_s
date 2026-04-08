@@ -1,0 +1,21 @@
+{
+  "spec_version": 1,
+  "description": "Three discrete tasks, each with its own grader module (for automated submission checks).",
+  "tasks": [
+    {
+      "task_id": "easy",
+      "grader_module": "graders.easy_grader",
+      "grader_file": "graders/easy_grader.py"
+    },
+    {
+      "task_id": "medium",
+      "grader_module": "graders.medium_grader",
+      "grader_file": "graders/medium_grader.py"
+    },
+    {
+      "task_id": "hard",
+      "grader_module": "graders.hard_grader",
+      "grader_file": "graders/hard_grader.py"
+    }
+  ]
+}

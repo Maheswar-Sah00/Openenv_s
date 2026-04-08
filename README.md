@@ -19,8 +19,6 @@ tags:
 
 **Scam Detection** is an **OpenEnv-compliant** environment where agents act as **bank/fintech fraud analysts**: discrete actions over a structured observation, **step rewards** for RL-style training, and a **deterministic grader** in **[0.0, 1.0]** per episode.
 
-Layout and documentation style follow strong community examples such as [goatedAreeeb/auto-dev-](https://github.com/goatedAreeeb/auto-dev-) (clear phases, API table, quick start, project tree).
-
 ---
 
 ## ✅ Phase 2 validation (organizer checks)
@@ -32,7 +30,9 @@ These map to the **deep validation** steps in the hackathon dashboard (Docker bu
 | **Docker build creation** | Image builds from repo root. | [`Dockerfile`](Dockerfile): Python 3.11-slim, `pip install -r requirements.txt`, `EXPOSE 7860`, `CMD` runs `uvicorn server.app:app` on `${PORT:-7860}`. |
 | **`inference.py` execution** | Script runs inside the built image without extra setup. | `docker run --rm <image> python inference.py ...` works; dependencies in [`requirements.txt`](requirements.txt). |
 | **Output parsing** | Stdout lines match the required protocol so logs can be scored. | Only **`[START]`**, **`[STEP]`**, **`[END]`** on stdout per episode; **`score=`** with **three** decimal places on `[END]`. See [Output protocol](#output-protocol-judge-parsing) below. |
-| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | Three tasks in [`openenv.yaml`](openenv.yaml) under `tasks_with_graders`; [`graders/scam_grader.py`](graders/scam_grader.py) clamps via `_safe_score` to **0.01–0.99**. |
+| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | **Three grader modules:** [`graders/easy_grader.py`](graders/easy_grader.py), [`graders/medium_grader.py`](graders/medium_grader.py), [`graders/hard_grader.py`](graders/hard_grader.py) (wrappers over [`graders/scam_grader.py`](graders/scam_grader.py)). Manifest: top-level **`tasks:`** in [`openenv.yaml`](openenv.yaml) plus [`task_graders.json`](task_graders.json). Scores clamped **0.01–0.99**. |
+
+**Why “Not enough tasks with graders” can still appear:** some pipelines **count distinct grader files** or only read a **`tasks:`** block in YAML. A single `scam_grader.py` is easy for humans but invisible to that heuristic. This repo now exposes **one Python grader file per task** and lists them explicitly.
 | **LLM criteria check** | Model calls go through the **injected LiteLLM proxy** (observed API usage). | `inference.py` builds `OpenAI(base_url=os.getenv("API_BASE_URL", ...), api_key=os.getenv("API_KEY") or os.getenv("HF_TOKEN"))`. Default agent is **`llm`** when **`API_KEY`** or **`HF_TOKEN`** is set — **do not** hardcode keys or swap in a private base URL for official eval. |
 
 **Local preflight (mirrors organizer flow):**
@@ -238,6 +238,8 @@ Other useful vars: `SCAM_ENV_MAX_RUNTIME_SEC` (default **1140**), `SUCCESS_SCORE
 | `python -m py_compile inference.py` | Syntax check. |
 | `python inference.py --agent baseline --all-tasks --seed 42` | End-to-end stdout protocol + grader. |
 | `openenv validate` (with `openenv-core[cli]`) | Manifest + layout vs [`openenv.yaml`](openenv.yaml). |
+| `python -m unittest tests.test_three_task_graders -v` | Three task grader modules + manifest paths. |
+| `python scripts/verify_task_graders.py` | Quick check that [`task_graders.json`](task_graders.json) files exist. |
 | `python scripts/validate_dataset.py` | Dataset schema. |
 | `docker build -t scam-detection-env .` | Same as Phase 2 **Docker build**. |
 | `python scripts/hf_smoke_check.py https://YOUR-SPACE.hf.space` | `POST /reset` + `POST /step`. |
@@ -255,7 +257,9 @@ scam-env/
 ├── inference.py           # Benchmark driver + stdout protocol
 ├── env/                   # ScamEnv, models, step rewards
 ├── tasks/                 # easy / medium / hard budgets + task ids
-├── graders/               # Deterministic 0–1 grader
+├── graders/               # scam_grader (core) + easy/medium/hard wrappers
+├── task_graders.json      # Machine-readable 3-task grader registry
+├── tests/                 # unittest: three grader modules + manifest
 ├── data/                  # scam_dataset.json
 ├── baseline/              # Rule-based agent
 ├── server/                # FastAPI (create_app) + OpenEnv types

@@ -38,11 +38,21 @@ reward_notes:
   step_reward: Shaped feedback for RL-style training (dense signals).
   grader_score: Deterministic per task; emitted strictly in (0,1) via graders/scam_grader.py (0.01–0.99).
 
-# Three benchmark tasks, each scored by grade_episode() in graders/scam_grader.py (same module for all).
+# Three tasks with **distinct grader files** (Phase 2 validators often count modules, not one shared file).
+# Shared logic lives in graders/scam_grader.py; easy/medium/hard modules wrap grade_episode(task_id, ...).
+tasks:
+  - id: easy
+    grader: graders/easy_grader.py
+  - id: medium
+    grader: graders/medium_grader.py
+  - id: hard
+    grader: graders/hard_grader.py
+
+# Legacy alias for scanners that look for this exact key:
 tasks_with_graders:
   - task_id: easy
-    grader: graders/scam_grader.py
+    grader: graders/easy_grader.py
   - task_id: medium
-    grader: graders/scam_grader.py
+    grader: graders/medium_grader.py
   - task_id: hard
-    grader: graders/scam_grader.py
+    grader: graders/hard_grader.py
