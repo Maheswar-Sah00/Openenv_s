@@ -38,7 +38,7 @@ if str(ROOT) not in sys.path:
 from baseline.baseline_agent import BaselineAgent
 from env.models import Action
 from env.scam_env import ScamEnv
-from graders.scam_grader import grade_episode
+from graders.scam_grader import finalize_episode_score, grade_episode
 from tasks.easy_task import MAX_STEPS as EASY_MAX
 from tasks.hard_task import MAX_STEPS as HARD_MAX
 from tasks.medium_task import MAX_STEPS as MEDIUM_MAX
@@ -85,7 +85,8 @@ def log_step(step: int, action: str, reward: float, done: bool, error: str | Non
 
 def log_end(success: bool, steps: int, score: float, rewards: list[float]) -> None:
     rewards_str = ",".join(f"{r:.2f}" for r in rewards)
-    sc = max(0.0, min(1.0, float(score)))
+    # Score already clamped to (0,1) open via finalize_episode_score / grade_episode.
+    sc = float(score)
     print(
         f"[END] success={str(success).lower()} steps={steps} score={sc:.3f} rewards={rewards_str}",
         flush=True,
@@ -290,7 +291,7 @@ def run_episode_protocol(
             env.close()
         except Exception as e:
             print(f"[DEBUG] env.close() error: {e}", file=sys.stderr, flush=True)
-        end_score = float(grader_val) if grader_val is not None else 0.0
+        end_score = finalize_episode_score(grader_val)
         log_end(success=success, steps=steps_taken, score=end_score, rewards=rewards)
         sys.stdout.flush()
         if os.getenv("SCAM_ENV_DEBUG") and grader_val is not None and sid is not None:

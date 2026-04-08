@@ -1,9 +1,25 @@
-"""Deterministic task graders: map action traces to scores in [0.0, 1.0]."""
+"""Deterministic task graders: map action traces to scores, then clamp to (0, 1) open."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
+
+# Hackathon / Phase 2: scores must be strictly inside (0, 1) — not 0.0, not 1.0.
+MIN_VALID_SCORE = 0.01  # strictly > 0.0
+MAX_VALID_SCORE = 0.99  # strictly < 1.0
+
+
+def _safe_score(value: float) -> float:
+    """Clamp any float to strictly within (0, 1) — never 0.00, never 1.00."""
+    return round(min(max(float(value), MIN_VALID_SCORE), MAX_VALID_SCORE), 2)
+
+
+def finalize_episode_score(value: float | None) -> float:
+    """For stdout [END] line when grading skipped (errors): still emit a valid open-interval score."""
+    if value is None:
+        return _safe_score(0.0)
+    return _safe_score(value)
 
 
 def _dataset_path(default: Path | None = None) -> Path:
@@ -32,12 +48,14 @@ def grade_episode(
     gray = "gray_area" in (row.get("tags") or [])
 
     if task_id == "easy":
-        return _grade_easy(is_scam, action_trace, gray)
-    if task_id == "medium":
-        return _grade_medium(is_scam, action_trace, gray)
-    if task_id == "hard":
-        return _grade_hard(is_scam, action_trace, row, gray)
-    raise ValueError(f"Unknown task_id: {task_id}")
+        raw = _grade_easy(is_scam, action_trace, gray)
+    elif task_id == "medium":
+        raw = _grade_medium(is_scam, action_trace, gray)
+    elif task_id == "hard":
+        raw = _grade_hard(is_scam, action_trace, row, gray)
+    else:
+        raise ValueError(f"Unknown task_id: {task_id}")
+    return _safe_score(raw)
 
 
 def _grade_easy(is_scam: bool, trace: list[str], gray: bool = False) -> float:
