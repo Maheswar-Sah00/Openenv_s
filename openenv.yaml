@@ -1,0 +1,39 @@
+# OpenEnv manifest (openenv validate / HF Space)
+spec_version: 1
+name: scam-detection-env
+type: space
+runtime: fastapi
+app: server.app:app
+port: 7860
+
+description: AI environment for scam detection and mitigation (fraud analyst simulation)
+version: "1.0.0"
+observation_schema_version: "1.1"
+
+actions:
+  - ignore
+  - verify_sender
+  - warn_user
+  - flag_scam
+  - block_sender
+  - escalate_to_bank
+
+observation_keys:
+  - observation_schema_version
+  - case_id
+  - message_text
+  - sender_type
+  - channel
+  - link_present
+  - urgency_score
+  - conversation_history
+  - sender_verified
+  - risk_score
+  - risk_factors
+  - steps_taken
+  - max_episode_steps
+  - terminal_actions
+
+reward_notes:
+  step_reward: Shaped feedback for RL-style training (dense signals).
+  grader_score: Deterministic 0.0–1.0 per task; official evaluation metric.

@@ -1,0 +1,2097 @@
+[
+  {
+    "id": "easy_scam_01",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your KYC expired. Send OTP immediately to avoid blocking.",
+    "messages": [
+      "Your KYC expired. Send OTP immediately to avoid blocking."
+    ],
+    "link_present": true,
+    "urgency_score": 0.95,
+    "tags": [
+      "kyc",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_02",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "URGENT: Click http://bit.ly/fakebank to verify your account.",
+    "messages": [
+      "URGENT: Click http://bit.ly/fakebank to verify your account."
+    ],
+    "link_present": true,
+    "urgency_score": 0.9,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_03",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Dear user, your ATM card is blocked. Share CVV to unlock.",
+    "messages": [
+      "Dear user, your ATM card is blocked. Share CVV to unlock."
+    ],
+    "link_present": false,
+    "urgency_score": 0.85,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_04",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "You won Rs 5 lakh! Pay processing fee via UPI to claim.",
+    "messages": [
+      "You won Rs 5 lakh! Pay processing fee via UPI to claim."
+    ],
+    "link_present": false,
+    "urgency_score": 0.8,
+    "tags": [
+      "investment",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_05",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "NetBanking access suspended. Reply with MPIN to restore.",
+    "messages": [
+      "NetBanking access suspended. Reply with MPIN to restore."
+    ],
+    "link_present": false,
+    "urgency_score": 0.92,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_06",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Your account will be debited in 1 hour unless you confirm OTP here.",
+    "messages": [
+      "Your account will be debited in 1 hour unless you confirm OTP here."
+    ],
+    "link_present": false,
+    "urgency_score": 0.88,
+    "tags": [
+      "otp",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_07",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "HDFC Security: unusual login. Verify at hdfc-secure-login.xyz",
+    "messages": [
+      "HDFC Security: unusual login. Verify at hdfc-secure-login.xyz"
+    ],
+    "link_present": true,
+    "urgency_score": 0.87,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_08",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "SBI: Your YONO session expired. Enter OTP to continue.",
+    "messages": [
+      "SBI: Your YONO session expired. Enter OTP to continue."
+    ],
+    "link_present": false,
+    "urgency_score": 0.9,
+    "tags": [
+      "impersonation",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_09",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Income Tax refund pending. Submit bank details on itrefund.co.in",
+    "messages": [
+      "Income Tax refund pending. Submit bank details on itrefund.co.in"
+    ],
+    "link_present": true,
+    "urgency_score": 0.82,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_10",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your wallet will be closed. Send Aadhaar OTP now.",
+    "messages": [
+      "Your wallet will be closed. Send Aadhaar OTP now."
+    ],
+    "link_present": false,
+    "urgency_score": 0.91,
+    "tags": [
+      "kyc",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_11",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Crypto doubling: send 1 ETH get 2 back in 10 minutes.",
+    "messages": [
+      "Crypto doubling: send 1 ETH get 2 back in 10 minutes."
+    ],
+    "link_present": true,
+    "urgency_score": 0.78,
+    "tags": [
+      "investment",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_12",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "WhatsApp: Your payment failed. Tap wa.me/fakepay to fix.",
+    "messages": [
+      "WhatsApp: Your payment failed. Tap wa.me/fakepay to fix."
+    ],
+    "link_present": true,
+    "urgency_score": 0.84,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_13",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Amazon: Order on hold. Confirm payment link amzn-security.ru",
+    "messages": [
+      "Amazon: Order on hold. Confirm payment link amzn-security.ru"
+    ],
+    "link_present": true,
+    "urgency_score": 0.83,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_14",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "IRCTC: Ticket cancelled unless you pay rebooking fee via link.",
+    "messages": [
+      "IRCTC: Ticket cancelled unless you pay rebooking fee via link."
+    ],
+    "link_present": true,
+    "urgency_score": 0.8,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_15",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Paytm KYC incomplete. Share OTP to complete in 30 minutes.",
+    "messages": [
+      "Paytm KYC incomplete. Share OTP to complete in 30 minutes."
+    ],
+    "link_present": false,
+    "urgency_score": 0.89,
+    "tags": [
+      "kyc",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_16",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your credit score dropped. Pay Rs 499 to fix instantly.",
+    "messages": [
+      "Your credit score dropped. Pay Rs 499 to fix instantly."
+    ],
+    "link_present": true,
+    "urgency_score": 0.76,
+    "tags": [
+      "scam_fee",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_17",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "FedEx: Package held at customs. Pay duty at fake-fedex.net",
+    "messages": [
+      "FedEx: Package held at customs. Pay duty at fake-fedex.net"
+    ],
+    "link_present": true,
+    "urgency_score": 0.81,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_18",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "LinkedIn: Someone viewed your profile 50 times. Click to see.",
+    "messages": [
+      "LinkedIn: Someone viewed your profile 50 times. Click to see."
+    ],
+    "link_present": true,
+    "urgency_score": 0.7,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_19",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your SIM will be deactivated. Send last 4 digits of Aadhaar.",
+    "messages": [
+      "Your SIM will be deactivated. Send last 4 digits of Aadhaar."
+    ],
+    "link_present": false,
+    "urgency_score": 0.86,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_20",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Bank server upgrade: validate credentials on secure-portal.tk",
+    "messages": [
+      "Bank server upgrade: validate credentials on secure-portal.tk"
+    ],
+    "link_present": true,
+    "urgency_score": 0.88,
+    "tags": [
+      "phishing",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_scam_21",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "RBI Notice: Your PAN is linked to suspicious UPI. Validate on rbisecure.in now.",
+    "messages": [
+      "RBI Notice: Your PAN is linked to suspicious UPI. Validate on rbisecure.in now."
+    ],
+    "link_present": true,
+    "urgency_score": 0.93,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_22",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Electricity dept: Bill unpaid. Pay Rs 2,499 via link or power cut in 2 hours.",
+    "messages": [
+      "Electricity dept: Bill unpaid. Pay Rs 2,499 via link or power cut in 2 hours."
+    ],
+    "link_present": true,
+    "urgency_score": 0.9,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_23",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "DHL: Customs hold on parcel. Pay clearance fee to dhl-track-support.net",
+    "messages": [
+      "DHL: Customs hold on parcel. Pay clearance fee to dhl-track-support.net"
+    ],
+    "link_present": true,
+    "urgency_score": 0.84,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_24",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Job offer: Work from home, earn 50k/week. Pay registration Rs 999 first.",
+    "messages": [
+      "Job offer: Work from home, earn 50k/week. Pay registration Rs 999 first."
+    ],
+    "link_present": false,
+    "urgency_score": 0.77,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_25",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your Netflix payment failed. Update card on netflix-billing-support.com",
+    "messages": [
+      "Your Netflix payment failed. Update card on netflix-billing-support.com"
+    ],
+    "link_present": true,
+    "urgency_score": 0.82,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_26",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "WINNER! You got iPhone 15 in lucky draw. Pay GST Rs 2,500 to claim.",
+    "messages": [
+      "WINNER! You got iPhone 15 in lucky draw. Pay GST Rs 2,500 to claim."
+    ],
+    "link_present": false,
+    "urgency_score": 0.8,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_27",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Aadhaar eKYC failed. Re-verify on uidai-helpdesk.co to avoid SIM block.",
+    "messages": [
+      "Aadhaar eKYC failed. Re-verify on uidai-helpdesk.co to avoid SIM block."
+    ],
+    "link_present": true,
+    "urgency_score": 0.91,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_28",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "SEBI alert: Your demat will freeze. Confirm PAN on sebi-verifyportal.xyz",
+    "messages": [
+      "SEBI alert: Your demat will freeze. Confirm PAN on sebi-verifyportal.xyz"
+    ],
+    "link_present": true,
+    "urgency_score": 0.86,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_29",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Mother needs surgery funds urgently — wrong account sent, please refund to this UPI.",
+    "messages": [
+      "Mother needs surgery funds urgently — wrong account sent, please refund to this UPI."
+    ],
+    "link_present": false,
+    "urgency_score": 0.88,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_30",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Your Flipkart refund of Rs 1,200 is pending. Approve on flipkart-refund.co",
+    "messages": [
+      "Your Flipkart refund of Rs 1,200 is pending. Approve on flipkart-refund.co"
+    ],
+    "link_present": true,
+    "urgency_score": 0.83,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_31",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Instagram: Copyright strike on your reel. Appeal within 24h at meta-appeals.io",
+    "messages": [
+      "Instagram: Copyright strike on your reel. Appeal within 24h at meta-appeals.io"
+    ],
+    "link_present": true,
+    "urgency_score": 0.74,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_32",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Truecaller Premium renewal failed. Tap tc-premium-billing.ru to fix.",
+    "messages": [
+      "Truecaller Premium renewal failed. Tap tc-premium-billing.ru to fix."
+    ],
+    "link_present": true,
+    "urgency_score": 0.72,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_33",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Gas subsidy credited. Claim Rs 3,200 on pm-subsidy-portal.in (last date today).",
+    "messages": [
+      "Gas subsidy credited. Claim Rs 3,200 on pm-subsidy-portal.in (last date today)."
+    ],
+    "link_present": true,
+    "urgency_score": 0.85,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_34",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your child’s school fee link expired. Pay immediately on schoolpay-verify.com",
+    "messages": [
+      "Your child’s school fee link expired. Pay immediately on schoolpay-verify.com"
+    ],
+    "link_present": true,
+    "urgency_score": 0.79,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_35",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Bank merger: re-KYC mandatory. Complete on merger-kyc-bank.net by tonight.",
+    "messages": [
+      "Bank merger: re-KYC mandatory. Complete on merger-kyc-bank.net by tonight."
+    ],
+    "link_present": true,
+    "urgency_score": 0.9,
+    "tags": [
+      "phishing",
+      "easy",
+      "variant"
+    ]
+  },
+  {
+    "id": "easy_scam_36",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Reminder: Your free trial ends tomorrow. Add card on billing-portal-now.net to avoid loss of data.",
+    "messages": [
+      "Reminder: Your free trial ends tomorrow. Add card on billing-portal-now.net to avoid loss of data."
+    ],
+    "link_present": true,
+    "urgency_score": 0.62,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_37",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "We noticed login from Windows PC. If this was you, no action needed.",
+    "messages": [
+      "We noticed login from Windows PC. If this was you, no action needed."
+    ],
+    "link_present": false,
+    "urgency_score": 0.45,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_38",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Security check: confirm your mobile number is still +91-XXXXXX7890 by tapping link.",
+    "messages": [
+      "Security check: confirm your mobile number is still +91-XXXXXX7890 by tapping link."
+    ],
+    "link_present": true,
+    "urgency_score": 0.7,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_39",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your reward points expire in 48 hours. Redeem on rewards-bank-partner.co",
+    "messages": [
+      "Your reward points expire in 48 hours. Redeem on rewards-bank-partner.co"
+    ],
+    "link_present": true,
+    "urgency_score": 0.66,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_40",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Voice mailbox full. Listen to urgent bank voicemail: call this premium-rate number.",
+    "messages": [
+      "Voice mailbox full. Listen to urgent bank voicemail: call this premium-rate number."
+    ],
+    "link_present": false,
+    "urgency_score": 0.72,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_41",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Linked bank account sync failed. Re-link on upi-sync-verify.in",
+    "messages": [
+      "Linked bank account sync failed. Re-link on upi-sync-verify.in"
+    ],
+    "link_present": true,
+    "urgency_score": 0.81,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_42",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Minor statement mismatch of Rs 1.00 — confirm via link to avoid freeze.",
+    "messages": [
+      "Minor statement mismatch of Rs 1.00 — confirm via link to avoid freeze."
+    ],
+    "link_present": true,
+    "urgency_score": 0.74,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_43",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your cheque book dispatch delayed. Track on cheque-dispatch-fake.com",
+    "messages": [
+      "Your cheque book dispatch delayed. Track on cheque-dispatch-fake.com"
+    ],
+    "link_present": true,
+    "urgency_score": 0.69,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_44",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "NEFT return: beneficiary name mismatch. Fix on neft-correction-portal.net",
+    "messages": [
+      "NEFT return: beneficiary name mismatch. Fix on neft-correction-portal.net"
+    ],
+    "link_present": true,
+    "urgency_score": 0.77,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_45",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "ATM card found at branch. Claim by paying courier fee via UPI.",
+    "messages": [
+      "ATM card found at branch. Claim by paying courier fee via UPI."
+    ],
+    "link_present": false,
+    "urgency_score": 0.71,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_46",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Loan pre-closure quote generated. Pay processing fee to download PDF.",
+    "messages": [
+      "Loan pre-closure quote generated. Pay processing fee to download PDF."
+    ],
+    "link_present": true,
+    "urgency_score": 0.78,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_47",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "CIBIL score updated. View full report on cibil-free-score.in",
+    "messages": [
+      "CIBIL score updated. View full report on cibil-free-score.in"
+    ],
+    "link_present": true,
+    "urgency_score": 0.73,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_48",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "International roaming pack activated without request. Cancel via roaming-cancel.ru",
+    "messages": [
+      "International roaming pack activated without request. Cancel via roaming-cancel.ru"
+    ],
+    "link_present": true,
+    "urgency_score": 0.68,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_49",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Your UPI PIN will expire. Reset on pin-reset-upi.co",
+    "messages": [
+      "Your UPI PIN will expire. Reset on pin-reset-upi.co"
+    ],
+    "link_present": true,
+    "urgency_score": 0.89,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_scam_50",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Bank holiday list 2026 attached. Open macro-enabled Excel from link.",
+    "messages": [
+      "Bank holiday list 2026 attached. Open macro-enabled Excel from link."
+    ],
+    "link_present": true,
+    "urgency_score": 0.64,
+    "tags": [
+      "phishing",
+      "easy",
+      "subtle"
+    ]
+  },
+  {
+    "id": "easy_legit_01",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Your salary of INR 85,000 has been credited to A/c XX1234.",
+    "messages": [
+      "Your salary of INR 85,000 has been credited to A/c XX1234."
+    ],
+    "link_present": false,
+    "urgency_score": 0.25,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_02",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Reminder: EMI of Rs 12,400 due on 10th. Pay via official app only.",
+    "messages": [
+      "Reminder: EMI of Rs 12,400 due on 10th. Pay via official app only."
+    ],
+    "link_present": false,
+    "urgency_score": 0.30000000000000004,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_03",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Your debit card ending 4242 was used at SWIGGY for Rs 320.",
+    "messages": [
+      "Your debit card ending 4242 was used at SWIGGY for Rs 320."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35000000000000003,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_04",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "NetBanking: Scheduled transfer of Rs 5,000 to Rahul completed.",
+    "messages": [
+      "NetBanking: Scheduled transfer of Rs 5,000 to Rahul completed."
+    ],
+    "link_present": false,
+    "urgency_score": 0.4,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_05",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Welcome to mobile banking. Download the official app from Play Store.",
+    "messages": [
+      "Welcome to mobile banking. Download the official app from Play Store."
+    ],
+    "link_present": false,
+    "urgency_score": 0.2,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_06",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Your FD receipt is available in the secure inbox of internet banking.",
+    "messages": [
+      "Your FD receipt is available in the secure inbox of internet banking."
+    ],
+    "link_present": false,
+    "urgency_score": 0.25,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_07",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Loan statement for March generated. Login to official portal to view.",
+    "messages": [
+      "Loan statement for March generated. Login to official portal to view."
+    ],
+    "link_present": false,
+    "urgency_score": 0.30000000000000004,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_08",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "UPI payment of Rs 150 to ZOMATO successful. Ref: 998877.",
+    "messages": [
+      "UPI payment of Rs 150 to ZOMATO successful. Ref: 998877."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35000000000000003,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_09",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Your meeting with branch manager is confirmed for Tuesday 3 PM.",
+    "messages": [
+      "Your meeting with branch manager is confirmed for Tuesday 3 PM."
+    ],
+    "link_present": false,
+    "urgency_score": 0.4,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_10",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Security tip: Never share OTP. Bank staff will never ask for it.",
+    "messages": [
+      "Security tip: Never share OTP. Bank staff will never ask for it."
+    ],
+    "link_present": false,
+    "urgency_score": 0.2,
+    "tags": [
+      "legitimate",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_legit_u_01",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "delivery_partner",
+    "message": "Blinkit: Your order #8821 arrives by 8 PM. Show the in-app rider code only on your phone.",
+    "messages": [
+      "Blinkit: Your order #8821 arrives by 8 PM. Show the in-app rider code only on your phone."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35,
+    "tags": [
+      "legitimate",
+      "easy",
+      "unknown_brand_ok"
+    ]
+  },
+  {
+    "id": "easy_legit_u_02",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "delivery_partner",
+    "message": "Swiggy: Rider is nearby. Never share your delivery PIN outside the Swiggy app.",
+    "messages": [
+      "Swiggy: Rider is nearby. Never share your delivery PIN outside the Swiggy app."
+    ],
+    "link_present": false,
+    "urgency_score": 0.3,
+    "tags": [
+      "legitimate",
+      "easy",
+      "unknown_brand_ok"
+    ]
+  },
+  {
+    "id": "easy_legit_u_03",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "service_provider",
+    "message": "IRCTC: PNR confirmed. Ticket details in official app only. No payment link via SMS.",
+    "messages": [
+      "IRCTC: PNR confirmed. Ticket details in official app only. No payment link via SMS."
+    ],
+    "link_present": false,
+    "urgency_score": 0.25,
+    "tags": [
+      "legitimate",
+      "easy",
+      "unknown_brand_ok"
+    ]
+  },
+  {
+    "id": "easy_legit_u_04",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "government_notice",
+    "message": "Government: GST filing reminder for GSTR-3B due date. File on gst.gov.in portal only.",
+    "messages": [
+      "Government: GST filing reminder for GSTR-3B due date. File on gst.gov.in portal only."
+    ],
+    "link_present": false,
+    "urgency_score": 0.4,
+    "tags": [
+      "legitimate",
+      "easy",
+      "unknown_brand_ok"
+    ]
+  },
+  {
+    "id": "easy_legit_u_05",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "telco_official",
+    "message": "Airtel: Data pack renewed. For queries use 121 or official app.",
+    "messages": [
+      "Airtel: Data pack renewed. For queries use 121 or official app."
+    ],
+    "link_present": false,
+    "urgency_score": 0.22,
+    "tags": [
+      "legitimate",
+      "easy",
+      "unknown_brand_ok"
+    ]
+  },
+  {
+    "id": "easy_legit_u_06",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "pension_authority",
+    "message": "NPS: Contribution of Rs 5,000 received for PRAN XX****12. Statement in CRA login.",
+    "messages": [
+      "NPS: Contribution of Rs 5,000 received for PRAN XX****12. Statement in CRA login."
+    ],
+    "link_present": false,
+    "urgency_score": 0.28,
+    "tags": [
+      "legitimate",
+      "easy",
+      "unknown_brand_ok"
+    ]
+  },
+  {
+    "id": "medium_scam_01",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Hello, I am calling from SBI support regarding your account activity.",
+    "messages": [
+      "Hello, I am calling from SBI support regarding your account activity.",
+      "Our system shows an unverified device login. Please confirm you received this SMS."
+    ],
+    "link_present": false,
+    "urgency_score": 0.5700000000000001,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_02",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "This is ICICI fraud desk. We noticed a suspicious UPI attempt.",
+    "messages": [
+      "This is ICICI fraud desk. We noticed a suspicious UPI attempt.",
+      "To secure your account, do not share OTP; we only need you to acknowledge this alert."
+    ],
+    "link_present": false,
+    "urgency_score": 0.5900000000000001,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_03",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Axis Bank priority support: unusual transaction flagged.",
+    "messages": [
+      "Axis Bank priority support: unusual transaction flagged.",
+      "If this was not you, we recommend warning any joint account holders immediately."
+    ],
+    "link_present": false,
+    "urgency_score": 0.6100000000000001,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_04",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Kotak 811: We could not reach you on call about a high-value transfer.",
+    "messages": [
+      "Kotak 811: We could not reach you on call about a high-value transfer.",
+      "Reply only if you initiated a transfer above Rs 50,000 in the last hour."
+    ],
+    "link_present": false,
+    "urgency_score": 0.63,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_05",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "HDFC: Potential phishing attempt detected on your registered email.",
+    "messages": [
+      "HDFC: Potential phishing attempt detected on your registered email.",
+      "Please verify sender identity using official app chat before clicking any links."
+    ],
+    "link_present": false,
+    "urgency_score": 0.65,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_06",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Federal Bank: New beneficiary added from unknown IP.",
+    "messages": [
+      "Federal Bank: New beneficiary added from unknown IP.",
+      "If you did not add this beneficiary, warn your family and contact branch."
+    ],
+    "link_present": false,
+    "urgency_score": 0.67,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_07",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Bandhan Bank: SIM swap alert on your registered mobile.",
+    "messages": [
+      "Bandhan Bank: SIM swap alert on your registered mobile.",
+      "We have paused high-risk transactions until you verify identity in branch or app."
+    ],
+    "link_present": false,
+    "urgency_score": 0.6900000000000001,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_08",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "IDFC FIRST: Credit card used abroad while phone location shows India.",
+    "messages": [
+      "IDFC FIRST: Credit card used abroad while phone location shows India.",
+      "Confirm travel or warn user via registered channels — do not use links in SMS."
+    ],
+    "link_present": false,
+    "urgency_score": 0.7100000000000001,
+    "tags": [
+      "impersonation",
+      "social_engineering"
+    ]
+  },
+  {
+    "id": "medium_scam_09",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "BOB World: We detected a login from a new city.",
+    "messages": [
+      "BOB World: We detected a login from a new city.",
+      "If this was not you, warn linked family accounts and call 1800-XXX from number printed on your card."
+    ],
+    "link_present": false,
+    "urgency_score": 0.6599999999999999,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_scam_10",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "PNB: UPI collect request spike on your account.",
+    "messages": [
+      "PNB: UPI collect request spike on your account.",
+      "Do not approve unknown requests. Acknowledge if you want us to pause UPI temporarily."
+    ],
+    "link_present": false,
+    "urgency_score": 0.58,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_scam_11",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Union Bank: Salary credit reversal risk due to name mismatch.",
+    "messages": [
+      "Union Bank: Salary credit reversal risk due to name mismatch.",
+      "Please verify with HR; meanwhile warn beneficiaries of delayed transfers."
+    ],
+    "link_present": false,
+    "urgency_score": 0.6,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_scam_12",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Yes Bank: Premium card used at high-risk merchant category.",
+    "messages": [
+      "Yes Bank: Premium card used at high-risk merchant category.",
+      "Confirm purchase or warn household cards on same profile."
+    ],
+    "link_present": false,
+    "urgency_score": 0.62,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_scam_13",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "IndusInd: Device binding changed for mobile banking.",
+    "messages": [
+      "IndusInd: Device binding changed for mobile banking.",
+      "If unexpected, warn joint holders and visit branch with ID."
+    ],
+    "link_present": false,
+    "urgency_score": 0.6399999999999999,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_scam_14",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "RBL: International POS attempt while card is domestic-only.",
+    "messages": [
+      "RBL: International POS attempt while card is domestic-only.",
+      "Reply ONLY if you are traveling; otherwise warn and block via app."
+    ],
+    "link_present": false,
+    "urgency_score": 0.6599999999999999,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_scam_15",
+    "difficulty": "medium",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "CSB Bank: Net banking password reset initiated from new browser.",
+    "messages": [
+      "CSB Bank: Net banking password reset initiated from new browser.",
+      "Warn anyone with access to your email; we never ask for OTP on call."
+    ],
+    "link_present": false,
+    "urgency_score": 0.58,
+    "tags": [
+      "impersonation",
+      "bank_brand_spoof"
+    ]
+  },
+  {
+    "id": "medium_legit_01",
+    "difficulty": "medium",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Your branch relationship manager will call from official 1800 number today.",
+    "messages": [
+      "Your branch relationship manager will call from official 1800 number today.",
+      "No action needed if you did not request a callback."
+    ],
+    "link_present": true,
+    "urgency_score": 0.25,
+    "tags": [
+      "legitimate"
+    ]
+  },
+  {
+    "id": "medium_legit_02",
+    "difficulty": "medium",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Annual privacy notice: how we use your data is updated on our website.",
+    "messages": [
+      "Annual privacy notice: how we use your data is updated on our website.",
+      "Log in to the official site only; ignore forwarded PDFs claiming to be us."
+    ],
+    "link_present": true,
+    "urgency_score": 0.25,
+    "tags": [
+      "legitimate"
+    ]
+  },
+  {
+    "id": "hard_scam_01",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Hi, your salary credit is delayed due to payroll sync. We will update shortly.",
+    "messages": [
+      "Hi, your salary credit is delayed due to payroll sync. We will update shortly.",
+      "Please confirm your employee ID by replying YES to validate HR records.",
+      "Now share the OTP you received to complete HR verification."
+    ],
+    "link_present": true,
+    "urgency_score": 0.68,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_02",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Netflix: Payment failed for renewal.",
+    "messages": [
+      "Netflix: Payment failed for renewal.",
+      "Update payment on our secure page within 24h.",
+      "Enter OTP from bank to authorize Rs 649 debit."
+    ],
+    "link_present": true,
+    "urgency_score": 0.71,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_03",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Courier: Package arriving today. Track with reference 8821.",
+    "messages": [
+      "Courier: Package arriving today. Track with reference 8821.",
+      "Customs fee Rs 499 required — pay via link for express clearance.",
+      "Urgent: OTP needed to release shipment or it will be returned."
+    ],
+    "link_present": true,
+    "urgency_score": 0.74,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_04",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Investment tip: Bluechip fund up 12% this quarter.",
+    "messages": [
+      "Investment tip: Bluechip fund up 12% this quarter.",
+      "Open demat on partner portal to get free research.",
+      "Transfer token amount via UPI to activate premium alerts."
+    ],
+    "link_present": true,
+    "urgency_score": 0.77,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_05",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Bank: Low balance alert on salary account.",
+    "messages": [
+      "Bank: Low balance alert on salary account.",
+      "Quick loan pre-approved — tap to see offer (no OTP needed to view).",
+      "To disburse, confirm OTP sent to mobile for Rs 1 verification debit."
+    ],
+    "link_present": true,
+    "urgency_score": 0.8,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_06",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Govt subsidy scheme: you are eligible for LPG cashback.",
+    "messages": [
+      "Govt subsidy scheme: you are eligible for LPG cashback.",
+      "Upload bank proof on portal (official-looking domain).",
+      "Final step: share OTP to link Aadhaar for instant credit."
+    ],
+    "link_present": true,
+    "urgency_score": 0.8300000000000001,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_07",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "hinglish",
+    "sender_type": "unknown",
+    "message": "Friend hi, wrong number pe message aa gaya — delete mat karna.",
+    "messages": [
+      "Friend hi, wrong number pe message aa gaya — delete mat karna.",
+      "Actually I need small help, bank server down hai.",
+      "Mere ko OTP forward kar do, main tumhara recharge kar dunga."
+    ],
+    "link_present": true,
+    "urgency_score": 0.86,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_08",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "HR: Please join new attendance app before Monday.",
+    "messages": [
+      "HR: Please join new attendance app before Monday.",
+      "Use temp password Attend2024!",
+      "Sync bank for payroll — enter OTP when prompted to verify account."
+    ],
+    "link_present": true,
+    "urgency_score": 0.89,
+    "tags": [
+      "multi_step",
+      "otp"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_09",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Team: Standup notes for today attached (no action needed).",
+    "messages": [
+      "Team: Standup notes for today attached (no action needed).",
+      "IT: Please approve MFA push for new VPN profile (looks like routine SSO).",
+      "IT-Helpdesk: Enter the OTP shown in email to finish VPN setup — urgent before audit."
+    ],
+    "link_present": true,
+    "urgency_score": 0.8600000000000001,
+    "tags": [
+      "multi_step",
+      "social_engineering"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_10",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Utility bill autopay succeeded for March. Thank you.",
+    "messages": [
+      "Utility bill autopay succeeded for March. Thank you.",
+      "Correction: duplicate debit detected. Refund will be processed after OTP confirmation.",
+      "Send OTP you receive from bank to this thread to speed up refund."
+    ],
+    "link_present": true,
+    "urgency_score": 0.8800000000000001,
+    "tags": [
+      "multi_step",
+      "social_engineering"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_11",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Dating app match: Hi! I trade forex part-time, happy to share tips.",
+    "messages": [
+      "Dating app match: Hi! I trade forex part-time, happy to share tips.",
+      "I can guide you on Binance — first deposit small USDT to test withdrawal.",
+      "Share your wallet seed screenshot privately so I can check if your wallet is compatible."
+    ],
+    "link_present": true,
+    "urgency_score": 0.9,
+    "tags": [
+      "multi_step",
+      "social_engineering"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_12",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "whatsapp",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Zoom: Meeting invite updated — join link unchanged.",
+    "messages": [
+      "Zoom: Meeting invite updated — join link unchanged.",
+      "Host requests pre-install of remote support plugin for screen share.",
+      "Run AnyDesk quick support code 9 8 7 6 5 so we can fix your audio driver."
+    ],
+    "link_present": true,
+    "urgency_score": 0.92,
+    "tags": [
+      "multi_step",
+      "social_engineering"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_scam_13",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Charity: Thank you for donating Rs 500 last month.",
+    "messages": [
+      "Charity: Thank you for donating Rs 500 last month.",
+      "Matching grant: double impact if you add Rs 500 via UPI collect request.",
+      "UPI collect sent — approve and share transaction OTP for receipt automation."
+    ],
+    "link_present": true,
+    "urgency_score": 0.9400000000000001,
+    "tags": [
+      "multi_step",
+      "social_engineering"
+    ],
+    "stage_labels": [
+      "lure",
+      "harvest",
+      "pressure"
+    ],
+    "otp_message_index": 2
+  },
+  {
+    "id": "hard_legit_01",
+    "difficulty": "hard",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Secure message thread 1: loan discussion continues.",
+    "messages": [
+      "Secure message thread 1: loan discussion continues.",
+      "Please upload documents only inside the mobile banking secure vault.",
+      "No OTP is required for document upload; ignore any SMS asking for OTP."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35,
+    "tags": [
+      "legitimate"
+    ],
+    "stage_labels": [
+      "info",
+      "info",
+      "info"
+    ],
+    "otp_message_index": null
+  },
+  {
+    "id": "hard_legit_02",
+    "difficulty": "hard",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Secure message thread 2: loan discussion continues.",
+    "messages": [
+      "Secure message thread 2: loan discussion continues.",
+      "Please upload documents only inside the mobile banking secure vault.",
+      "No OTP is required for document upload; ignore any SMS asking for OTP."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35,
+    "tags": [
+      "legitimate"
+    ],
+    "stage_labels": [
+      "info",
+      "info",
+      "info"
+    ],
+    "otp_message_index": null
+  },
+  {
+    "id": "hard_legit_03",
+    "difficulty": "hard",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Secure message thread 3: loan discussion continues.",
+    "messages": [
+      "Secure message thread 3: loan discussion continues.",
+      "Please upload documents only inside the mobile banking secure vault.",
+      "No OTP is required for document upload; ignore any SMS asking for OTP."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35,
+    "tags": [
+      "legitimate"
+    ],
+    "stage_labels": [
+      "info",
+      "info",
+      "info"
+    ],
+    "otp_message_index": null
+  },
+  {
+    "id": "hard_legit_04",
+    "difficulty": "hard",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Secure message thread 4: loan discussion continues.",
+    "messages": [
+      "Secure message thread 4: loan discussion continues.",
+      "Please upload documents only inside the mobile banking secure vault.",
+      "No OTP is required for document upload; ignore any SMS asking for OTP."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35,
+    "tags": [
+      "legitimate"
+    ],
+    "stage_labels": [
+      "info",
+      "info",
+      "info"
+    ],
+    "otp_message_index": null
+  },
+  {
+    "id": "hard_legit_05",
+    "difficulty": "hard",
+    "true_label": "legitimate",
+    "channel": "in_app",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Secure message thread 5: loan discussion continues.",
+    "messages": [
+      "Secure message thread 5: loan discussion continues.",
+      "Please upload documents only inside the mobile banking secure vault.",
+      "No OTP is required for document upload; ignore any SMS asking for OTP."
+    ],
+    "link_present": false,
+    "urgency_score": 0.35,
+    "tags": [
+      "legitimate"
+    ],
+    "stage_labels": [
+      "info",
+      "info",
+      "info"
+    ],
+    "otp_message_index": null
+  },
+  {
+    "id": "easy_gray_legit_01",
+    "difficulty": "easy",
+    "true_label": "legitimate",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "OTP required for login: use only the official app. Never share OTP by SMS reply.",
+    "messages": [
+      "OTP required for login: use only the official app. Never share OTP by SMS reply."
+    ],
+    "link_present": false,
+    "urgency_score": 0.72,
+    "tags": [
+      "gray_area",
+      "otp_language",
+      "easy"
+    ]
+  },
+  {
+    "id": "easy_gray_scam_01",
+    "difficulty": "easy",
+    "true_label": "scam",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Hi, this is a routine security check. Please confirm you received this message. No action needed unless you see suspicious activity.",
+    "messages": [
+      "Hi, this is a routine security check. Please confirm you received this message. No action needed unless you see suspicious activity."
+    ],
+    "link_present": false,
+    "urgency_score": 0.4,
+    "tags": [
+      "gray_area",
+      "soft_social",
+      "easy"
+    ]
+  },
+  {
+    "id": "medium_gray_legit_01",
+    "difficulty": "medium",
+    "true_label": "legitimate",
+    "channel": "email",
+    "language": "en",
+    "sender_type": "bank_official",
+    "message": "Unusual login detected. If this was not you, call the number on your card.",
+    "messages": [
+      "Unusual login detected. If this was not you, call the number on your card.",
+      "We will never ask for your full card number or PIN by email."
+    ],
+    "link_present": false,
+    "urgency_score": 0.68,
+    "tags": [
+      "gray_area",
+      "security_alert",
+      "medium"
+    ],
+    "stage_labels": [
+      "info",
+      "info"
+    ]
+  },
+  {
+    "id": "hard_gray_scam_01",
+    "difficulty": "hard",
+    "true_label": "scam",
+    "channel": "sms",
+    "language": "en",
+    "sender_type": "unknown",
+    "message": "Reminder: your EMI is due tomorrow.",
+    "messages": [
+      "Reminder: your EMI is due tomorrow.",
+      "Pay now via this UPI ID to avoid late fee: scam.upi@pay"
+    ],
+    "link_present": false,
+    "urgency_score": 0.55,
+    "tags": [
+      "gray_area",
+      "emi",
+      "hard"
+    ],
+    "stage_labels": [
+      "benign_open",
+      "malicious_close"
+    ],
+    "otp_message_index": null
+  }
+]
