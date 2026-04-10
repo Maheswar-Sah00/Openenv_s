@@ -41,15 +41,18 @@ def resolve_task_id(task_id: str) -> str:
     return TASK_ALIASES.get(t, t)
 
 
-def grader_file_for(canonical_task_id: str) -> str:
-    """Relative path used in openenv.yaml / task_graders.json."""
-    c = resolve_task_id(canonical_task_id)
-    return f"tasks/grader_{c}.py"
+# Single canonical grader module (DaddyCoder-style); all tasks dispatch inside tasks.graders.
+CANONICAL_GRADER_FILE = "tasks/graders.py"
+CANONICAL_GRADER_MODULE = "tasks.graders"
 
 
-def grader_module_for(canonical_task_id: str) -> str:
-    c = resolve_task_id(canonical_task_id)
-    return f"tasks.grader_{c}"
+def grader_file_for(_canonical_task_id: str | None = None) -> str:
+    """Relative path for manifests; all tasks share tasks/graders.py."""
+    return CANONICAL_GRADER_FILE
+
+
+def grader_module_for(_canonical_task_id: str | None = None) -> str:
+    return CANONICAL_GRADER_MODULE
 
 
 def _joined_text(row: dict[str, Any]) -> str:
@@ -84,6 +87,8 @@ def scenario_in_task_pool(row: dict[str, Any], canonical_task_id: str) -> bool:
 
 
 __all__ = [
+    "CANONICAL_GRADER_FILE",
+    "CANONICAL_GRADER_MODULE",
     "CANONICAL_TASK_IDS",
     "MAX_STEPS_BY_TASK",
     "TASK_ALIASES",

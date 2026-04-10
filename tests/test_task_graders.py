@@ -1,4 +1,4 @@
-"""Ensure tasks/graders.py, task_registry, manifests, and per-task grader files match Phase 2 checks."""
+"""Ensure tasks/graders.py, task_registry, and manifests match Phase 2 checks (single grader file)."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 
 from tasks.task_registry import (
+    CANONICAL_GRADER_FILE,
     CANONICAL_TASK_IDS,
     grader_file_for,
     resolve_task_id,
@@ -17,8 +18,6 @@ from tasks.task_registry import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-
-EXPECTED_GRADER_BY_TASK_ID = {tid: grader_file_for(tid) for tid in CANONICAL_TASK_IDS}
 
 
 class TestTaskGraders(unittest.TestCase):
@@ -58,7 +57,7 @@ class TestTaskGraders(unittest.TestCase):
         self.assertEqual(resolve_task_id("medium"), "verify_warn_chain")
         self.assertEqual(resolve_task_id("hard"), "progressive_thread")
 
-    def test_openenv_yaml_lists_six_tasks_with_distinct_grader_paths(self) -> None:
+    def test_openenv_yaml_lists_six_tasks_all_use_tasks_graders_py(self) -> None:
         raw = (ROOT / "openenv.yaml").read_text(encoding="utf-8")
         doc = yaml.safe_load(raw)
         self.assertIsInstance(doc, dict)
@@ -74,19 +73,17 @@ class TestTaskGraders(unittest.TestCase):
             ids.append(tid)
             g = row.get("grader") or row.get("grader_file")
             self.assertIsNotNone(g, f"task {tid} missing grader path")
-            expected = EXPECTED_GRADER_BY_TASK_ID.get(tid)
-            self.assertIsNotNone(expected, f"unexpected task id {tid}")
             norm = g.replace("\\", "/")
             self.assertEqual(
                 norm,
-                expected,
-                f"task {tid} should point at {expected}, got {g}",
+                CANONICAL_GRADER_FILE,
+                f"task {tid} should point at {CANONICAL_GRADER_FILE}, got {g}",
             )
             paths.add(norm)
             path = ROOT / norm
             self.assertTrue(path.is_file(), f"grader file missing: {path}")
         self.assertEqual(set(ids), set(CANONICAL_TASK_IDS))
-        self.assertEqual(len(paths), 6, "openenv tasks should use six distinct grader file paths")
+        self.assertEqual(paths, {CANONICAL_GRADER_FILE})
 
     def test_task_graders_json_matches(self) -> None:
         doc = json.loads((ROOT / "task_graders.json").read_text(encoding="utf-8"))
@@ -96,30 +93,28 @@ class TestTaskGraders(unittest.TestCase):
         for row in rows:
             tid = row.get("task_id")
             rel = row.get("grader_file")
+            mod = row.get("grader_module")
             self.assertIsNotNone(tid)
-            expected = EXPECTED_GRADER_BY_TASK_ID.get(tid)
-            self.assertIsNotNone(expected)
-            self.assertEqual(rel.replace("\\", "/"), expected)
+            self.assertEqual(rel.replace("\\", "/"), CANONICAL_GRADER_FILE)
+            self.assertEqual(mod, "tasks.graders")
             self.assertTrue((ROOT / rel).is_file())
             files.add(rel.replace("\\", "/"))
-        self.assertEqual(len(files), 6)
+        self.assertEqual(files, {CANONICAL_GRADER_FILE})
 
-    def test_legacy_task_packages_reference_grader_files(self) -> None:
+    def test_legacy_task_packages_reference_graders_py(self) -> None:
         from tasks.easy_task import GRADER_FILE as e
         from tasks.hard_task import GRADER_FILE as h
         from tasks.medium_task import GRADER_FILE as m
 
-        self.assertEqual(e.replace("\\", "/"), grader_file_for("single_turn_triage"))
-        self.assertEqual(m.replace("\\", "/"), grader_file_for("verify_warn_chain"))
-        self.assertEqual(h.replace("\\", "/"), grader_file_for("progressive_thread"))
+        for rel in (e, m, h):
+            self.assertEqual(rel.replace("\\", "/"), CANONICAL_GRADER_FILE)
+            self.assertEqual(grader_file_for(), CANONICAL_GRADER_FILE)
 
-    def test_per_task_grader_modules_export_grade_episode(self) -> None:
-        from tasks.grader_single_turn_triage import grade_episode as g1
-        from tasks.grader_verify_warn_chain import grade_episode as g2
+    def test_graders_exports_per_task_callables(self) -> None:
         from tasks.graders import grade_single_turn_triage, grade_verify_warn_chain
 
-        self.assertIs(g1, grade_single_turn_triage)
-        self.assertIs(g2, grade_verify_warn_chain)
+        self.assertTrue(callable(grade_single_turn_triage))
+        self.assertTrue(callable(grade_verify_warn_chain))
 
     def test_each_task_pool_non_empty(self) -> None:
         data = json.loads((ROOT / "data" / "scam_dataset.json").read_text(encoding="utf-8"))
