@@ -1,21 +1,21 @@
 {
   "spec_version": 1,
-  "description": "Three tasks; canonical grader module is tasks/graders.py (same file for all task ids).",
+  "description": "Three tasks; deterministic scoring in tasks/graders.py; per-task grader_*.py entry files for validators.",
   "tasks": [
     {
       "task_id": "easy",
-      "grader_module": "tasks.graders",
-      "grader_file": "tasks/graders.py"
+      "grader_module": "tasks.grader_easy",
+      "grader_file": "tasks/grader_easy.py"
     },
     {
       "task_id": "medium",
-      "grader_module": "tasks.graders",
-      "grader_file": "tasks/graders.py"
+      "grader_module": "tasks.grader_medium",
+      "grader_file": "tasks/grader_medium.py"
     },
     {
       "task_id": "hard",
-      "grader_module": "tasks.graders",
-      "grader_file": "tasks/graders.py"
+      "grader_module": "tasks.grader_hard",
+      "grader_file": "tasks/grader_hard.py"
     }
   ]
 }

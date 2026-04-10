@@ -3,5 +3,5 @@
 TASK_ID = "easy"
 MAX_STEPS = 8
 # Phase 2 / static tools: link task id → grader module
-GRADER_MODULE = "tasks.graders"
-GRADER_FILE = "tasks/graders.py"
+GRADER_MODULE = "tasks.grader_easy"
+GRADER_FILE = "tasks/grader_easy.py"
