@@ -36,23 +36,30 @@ observation_keys:
 
 reward_notes:
   step_reward: Shaped feedback for RL-style training (dense signals).
-  grader_score: Deterministic per task; emitted strictly in (0,1) via graders/scam_grader.py (0.01–0.99).
+  grader_score: Deterministic per task; emitted strictly in (0,1) via tasks/graders.py → graders/scam_grader.py (0.01–0.99).
 
-# Three tasks with **distinct grader files** (Phase 2 validators often count modules, not one shared file).
-# Shared logic lives in graders/scam_grader.py; easy/medium/hard modules wrap grade_episode(task_id, ...).
+# tasks/graders.py is the canonical grader module (community layout); all three tasks delegate there.
 tasks:
   - id: easy
-    grader: graders/easy_grader.py
+    description: Single-turn scam vs legitimate triage; escalate or avoid false positives.
+    steps: 8
+    ideal_action: verify_sender then warn_user then flag_scam on scams; ignore on clear legitimate.
+    grader: tasks/graders.py
   - id: medium
-    grader: graders/medium_grader.py
+    description: Multi-line scams; verification gates further thread content before full credit.
+    steps: 12
+    ideal_action: verify_sender and warn_user before flag_scam or escalate_to_bank on scams.
+    grader: tasks/graders.py
   - id: hard
-    grader: graders/hard_grader.py
+    description: Thread unfolds over steps; early verify and warn before terminal escalation.
+    steps: 20
+    ideal_action: verify_sender early, warn_user, then flag_scam or escalate_to_bank.
+    grader: tasks/graders.py
 
-# Legacy alias for scanners that look for this exact key:
 tasks_with_graders:
   - task_id: easy
-    grader: graders/easy_grader.py
+    grader: tasks/graders.py
   - task_id: medium
-    grader: graders/medium_grader.py
+    grader: tasks/graders.py
   - task_id: hard
-    grader: graders/hard_grader.py
+    grader: tasks/graders.py

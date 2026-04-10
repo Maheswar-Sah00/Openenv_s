@@ -30,9 +30,9 @@ These map to the **deep validation** steps in the hackathon dashboard (Docker bu
 | **Docker build creation** | Image builds from repo root. | [`Dockerfile`](Dockerfile): Python 3.11-slim, `pip install -r requirements.txt`, `EXPOSE 7860`, `CMD` runs `uvicorn server.app:app` on `${PORT:-7860}`. |
 | **`inference.py` execution** | Script runs inside the built image without extra setup. | `docker run --rm <image> python inference.py ...` works; dependencies in [`requirements.txt`](requirements.txt). |
 | **Output parsing** | Stdout lines match the required protocol so logs can be scored. | Only **`[START]`**, **`[STEP]`**, **`[END]`** on stdout per episode; **`score=`** with **three** decimal places on `[END]`. See [Output protocol](#output-protocol-judge-parsing) below. |
-| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | **Three grader modules:** [`graders/easy_grader.py`](graders/easy_grader.py), [`graders/medium_grader.py`](graders/medium_grader.py), [`graders/hard_grader.py`](graders/hard_grader.py) (wrappers over [`graders/scam_grader.py`](graders/scam_grader.py)). Manifest: top-level **`tasks:`** in [`openenv.yaml`](openenv.yaml) plus [`task_graders.json`](task_graders.json). Scores clamped **0.01–0.99**. |
+| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | **Canonical module:** [`tasks/graders.py`](tasks/graders.py) (`grade_action`, `grade_episode`, `_grade_easy` / `_medium` / `_hard`). Core math in [`graders/scam_grader.py`](graders/scam_grader.py). [`openenv.yaml`](openenv.yaml) **`tasks:`** each set `grader: tasks/graders.py` with `id`, `description`, `steps`, `ideal_action`; [`task_graders.json`](task_graders.json) lists the same. Scores **0.01–0.99**. |
 
-**Why “Not enough tasks with graders” can still appear:** some pipelines **count distinct grader files** or only read a **`tasks:`** block in YAML. A single `scam_grader.py` is easy for humans but invisible to that heuristic. This repo now exposes **one Python grader file per task** and lists them explicitly.
+**Why “Not enough tasks with graders” appears:** many validators only scan **`tasks/graders.py`** (community layout) or a rich **`tasks:`** list in YAML. Keeping all logic under `graders/scam_grader.py` only, without a **`tasks/graders.py`** entrypoint, fails those heuristics even when behavior is correct.
 | **LLM criteria check** | Model calls go through the **injected LiteLLM proxy** (observed API usage). | `inference.py` builds `OpenAI(base_url=os.getenv("API_BASE_URL", ...), api_key=os.getenv("API_KEY") or os.getenv("HF_TOKEN"))`. Default agent is **`llm`** when **`API_KEY`** or **`HF_TOKEN`** is set — **do not** hardcode keys or swap in a private base URL for official eval. |
 
 **Local preflight (mirrors organizer flow):**
@@ -120,7 +120,7 @@ Schema version and keys are declared in [`openenv.yaml`](openenv.yaml).
 | `medium` | 🟡 Medium | Scams: **`verify_sender`** + **`warn_user`** before full credit; content gated until verify. |
 | `hard` | 🔴 Hard | Early verify + warn + terminal escalation/flag; late verify can reduce score. |
 
-**Grader:** [`graders/scam_grader.py`](graders/scam_grader.py). **`gray_area`** rows in the dataset use **partial credit**.
+**Grader:** entry [`tasks/graders.py`](tasks/graders.py); rules in [`graders/scam_grader.py`](graders/scam_grader.py). **`gray_area`** rows use **partial credit**.
 
 ---
 
@@ -238,7 +238,7 @@ Other useful vars: `SCAM_ENV_MAX_RUNTIME_SEC` (default **1140**), `SUCCESS_SCORE
 | `python -m py_compile inference.py` | Syntax check. |
 | `python inference.py --agent baseline --all-tasks --seed 42` | End-to-end stdout protocol + grader. |
 | `openenv validate` (with `openenv-core[cli]`) | Manifest + layout vs [`openenv.yaml`](openenv.yaml). |
-| `python -m unittest tests.test_three_task_graders -v` | Three task grader modules + manifest paths. |
+| `python -m unittest tests.test_three_task_graders -v` | `tasks/graders.py` + `openenv.yaml` `tasks:` + `task_graders.json`. |
 | `python scripts/verify_task_graders.py` | Quick check that [`task_graders.json`](task_graders.json) files exist. |
 | `python scripts/validate_dataset.py` | Dataset schema. |
 | `docker build -t scam-detection-env .` | Same as Phase 2 **Docker build**. |
@@ -257,9 +257,10 @@ scam-env/
 ├── inference.py           # Benchmark driver + stdout protocol
 ├── env/                   # ScamEnv, models, step rewards
 ├── tasks/                 # easy / medium / hard budgets + task ids
-├── graders/               # scam_grader (core) + easy/medium/hard wrappers
+├── tasks/graders.py       # Canonical grader API (Phase 2 layout)
+├── graders/               # scam_grader (core) + optional easy/medium/hard wrappers
 ├── task_graders.json      # Machine-readable 3-task grader registry
-├── tests/                 # unittest: three grader modules + manifest
+├── tests/                 # unittest: tasks/graders + manifest
 ├── data/                  # scam_dataset.json
 ├── baseline/              # Rule-based agent
 ├── server/                # FastAPI (create_app) + OpenEnv types
@@ -312,7 +313,7 @@ while not done:
     obs, reward, done, step_info = env.step(action)
 ```
 
-Grade with `grade_episode(env.task_id, env.action_trace, info["scenario_id"])`.
+Grade with `from tasks.graders import grade_episode` then `grade_episode(env.task_id, env.action_trace, info["scenario_id"])`.
 
 ---
 

@@ -2,5 +2,5 @@
 
 TASK_ID = "medium"
 MAX_STEPS = 12
-GRADER_MODULE = "graders.medium_grader"
-GRADER_FILE = "graders/medium_grader.py"
+GRADER_MODULE = "tasks.graders"
+GRADER_FILE = "tasks/graders.py"

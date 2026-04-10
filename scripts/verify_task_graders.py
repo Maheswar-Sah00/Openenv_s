@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exit 0 if three per-task grader files exist (for local / CI preflight)."""
+"""Exit 0 if task_graders.json lists 3 tasks and tasks/graders.py exists (CI / local preflight)."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ def main() -> int:
         if not rel or not (ROOT / rel).is_file():
             print(f"Missing grader file: {rel}", file=sys.stderr)
             return 1
-    print(f"OK: {len(tasks)} task grader modules present")
+    print(f"OK: {len(tasks)} tasks, grader file tasks/graders.py present")
     return 0
 
 

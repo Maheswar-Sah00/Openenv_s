@@ -13,7 +13,7 @@ if str(ROOT) not in sys.path:
 
 from baseline.baseline_agent import BaselineAgent
 from env.scam_env import ScamEnv
-from graders.scam_grader import grade_episode
+from tasks.graders import grade_episode
 from tasks.easy_task import MAX_STEPS as EASY_MAX
 from tasks.hard_task import MAX_STEPS as HARD_MAX
 from tasks.medium_task import MAX_STEPS as MEDIUM_MAX

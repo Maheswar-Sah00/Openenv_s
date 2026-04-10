@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from graders.scam_grader import grade_episode as _grade_episode
+from tasks.graders import grade_episode as _grade_episode
 
 TASK_ID = "hard"
 

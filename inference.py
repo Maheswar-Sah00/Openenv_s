@@ -38,7 +38,7 @@ if str(ROOT) not in sys.path:
 from baseline.baseline_agent import BaselineAgent
 from env.models import Action
 from env.scam_env import ScamEnv
-from graders.scam_grader import finalize_episode_score, grade_episode
+from tasks.graders import finalize_episode_score, grade_episode
 from tasks.easy_task import MAX_STEPS as EASY_MAX
 from tasks.hard_task import MAX_STEPS as HARD_MAX
 from tasks.medium_task import MAX_STEPS as MEDIUM_MAX
