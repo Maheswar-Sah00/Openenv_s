@@ -18,9 +18,7 @@ if str(ROOT) not in sys.path:
 from baseline.baseline_agent import BaselineAgent
 from env.scam_env import ScamEnv
 from tasks.graders import grade_episode, load_scenario_by_id
-from tasks.easy_task import MAX_STEPS as EASY_MAX
-from tasks.hard_task import MAX_STEPS as HARD_MAX
-from tasks.medium_task import MAX_STEPS as MEDIUM_MAX
+from tasks.task_registry import CANONICAL_TASK_IDS, MAX_STEPS_BY_TASK, TASK_ALIASES
 
 SUCCESS_THRESHOLD = float(os.getenv("SUCCESS_SCORE_THRESHOLD", "0.8"))
 
@@ -114,7 +112,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    max_steps = {"easy": EASY_MAX, "medium": MEDIUM_MAX, "hard": HARD_MAX}[args.task]
+    max_steps = MAX_STEPS_BY_TASK[args.task]
     env = ScamEnv(task_id=args.task, max_steps=max_steps)
 
     get_action = None

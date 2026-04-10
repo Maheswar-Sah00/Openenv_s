@@ -14,9 +14,7 @@ if str(ROOT) not in sys.path:
 from baseline.baseline_agent import BaselineAgent
 from env.scam_env import ScamEnv
 from tasks.graders import grade_episode
-from tasks.easy_task import MAX_STEPS as EASY_MAX
-from tasks.hard_task import MAX_STEPS as HARD_MAX
-from tasks.medium_task import MAX_STEPS as MEDIUM_MAX
+from tasks.task_registry import CANONICAL_TASK_IDS, MAX_STEPS_BY_TASK, TASK_ALIASES
 
 
 def run_episode(env: ScamEnv, agent: BaselineAgent, seed: int | None) -> tuple[float, float, str, list[str]]:
@@ -35,12 +33,13 @@ def run_episode(env: ScamEnv, agent: BaselineAgent, seed: int | None) -> tuple[f
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Baseline benchmark — table output")
-    parser.add_argument("--task", choices=["easy", "medium", "hard"], default="easy")
+    _choices = sorted(set(list(CANONICAL_TASK_IDS) + list(TASK_ALIASES.keys())))
+    parser.add_argument("--task", choices=_choices, default="easy")
     parser.add_argument("--episodes", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
-    max_steps = {"easy": EASY_MAX, "medium": MEDIUM_MAX, "hard": HARD_MAX}[args.task]
+    max_steps = MAX_STEPS_BY_TASK[args.task]
     env = ScamEnv(task_id=args.task, max_steps=max_steps)
     agent = BaselineAgent()
 

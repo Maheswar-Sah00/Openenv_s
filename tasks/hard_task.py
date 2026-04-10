@@ -1,6 +1,8 @@
-"""Hard task: multi-step threads — pattern recognition and escalation."""
+"""Legacy alias: hard → progressive_thread."""
+
+from tasks.task_registry import MAX_STEPS_BY_TASK, grader_file_for, grader_module_for
 
 TASK_ID = "hard"
-MAX_STEPS = 20
-GRADER_MODULE = "tasks.grader_hard"
-GRADER_FILE = "tasks/grader_hard.py"
+MAX_STEPS = MAX_STEPS_BY_TASK["hard"]
+GRADER_MODULE = grader_module_for("progressive_thread")
+GRADER_FILE = grader_file_for("progressive_thread")

@@ -8,6 +8,7 @@ from typing import Any
 
 from env.models import Action, Observation
 from env.reward import compute_step_reward
+from tasks.task_registry import resolve_task_id, scenario_in_task_pool
 
 
 @dataclass
@@ -61,6 +62,19 @@ def _load_scenarios(path: Path) -> list[Scenario]:
     return out
 
 
+def _scenario_row_dict(s: Scenario) -> dict[str, Any]:
+    """Dataset-shaped dict for task pool filters."""
+    return {
+        "id": s.id,
+        "difficulty": s.difficulty,
+        "true_label": s.true_label,
+        "messages": s.messages,
+        "tags": s.tags,
+        "link_present": s.link_present,
+        "otp_message_index": s.otp_message_index,
+    }
+
+
 class ScamEnv:
     """OpenEnv-style fraud analyst simulation."""
 
@@ -80,6 +94,7 @@ class ScamEnv:
         max_steps: int = 20,
     ) -> None:
         self.task_id = task_id
+        self._canonical_task_id = resolve_task_id(task_id)
         base = Path(__file__).resolve().parent.parent
         self.data_path = data_path or (base / "data" / "scam_dataset.json")
         self._all = _load_scenarios(self.data_path)
@@ -92,9 +107,12 @@ class ScamEnv:
         self.action_trace: list[str] = []
 
     def _pool(self) -> list[Scenario]:
-        diff_map = {"easy": "easy", "medium": "medium", "hard": "hard"}
-        d = diff_map.get(self.task_id, "easy")
-        return [s for s in self._all if s.difficulty == d]
+        canon = self._canonical_task_id
+        out: list[Scenario] = []
+        for s in self._all:
+            if scenario_in_task_pool(_scenario_row_dict(s), canon):
+                out.append(s)
+        return out
 
     def reset(self, seed: int | None = None, scenario_id: str | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
         self._rng = random.Random(seed)

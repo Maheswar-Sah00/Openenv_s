@@ -1,12 +1,14 @@
 # tasks/graders.py
-# All three task graders in one module (Phase 2 / static discovery friendly).
-# Deterministic: same trajectory + scenario → same score. NO LLM judges.
+# Episode-level reward functions for each task. All reported scores are strictly in (0.0, 1.0).
+# Layout mirrors community OpenEnv examples (sectioned task-specific helpers + dispatch).
 
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 from tasks.database import load_scenario_by_id
+from tasks.task_registry import resolve_task_id
 
 # Hackathon / Phase 2: scores strictly inside (0, 1) — not 0.0, not 1.0.
 MIN_VALID_SCORE = 0.01
@@ -25,7 +27,13 @@ def finalize_episode_score(value: float | None) -> float:
     return _safe_score(value)
 
 
-def _raw_score_easy(is_scam: bool, trace: list[str], gray: bool = False) -> float:
+# ---------------------------------------------------------------------------
+# Core rubrics (difficulty-shaped): single-turn, verify chain, progressive thread
+# ---------------------------------------------------------------------------
+
+
+def _grade_single_turn_triage(is_scam: bool, trace: list[str], gray: bool = False) -> float:
+    """Obvious one-shot scam vs legitimate (legacy: easy)."""
     if is_scam:
         if "ignore" in trace:
             return 0.15 if gray else 0.0
@@ -47,7 +55,8 @@ def _raw_score_easy(is_scam: bool, trace: list[str], gray: bool = False) -> floa
     return 0.55 if gray else 0.5
 
 
-def _raw_score_medium(is_scam: bool, trace: list[str], gray: bool = False) -> float:
+def _grade_verify_warn_chain(is_scam: bool, trace: list[str], gray: bool = False) -> float:
+    """Verify + warn before escalate/flag (legacy: medium)."""
     has_v = "verify_sender" in trace
     has_w = "warn_user" in trace
     if is_scam:
@@ -70,7 +79,8 @@ def _raw_score_medium(is_scam: bool, trace: list[str], gray: bool = False) -> fl
     return 0.65 if gray else 0.6
 
 
-def _raw_score_hard(is_scam: bool, trace: list[str], row: dict, gray: bool = False) -> float:
+def _grade_progressive_thread(is_scam: bool, trace: list[str], row: dict[str, Any], gray: bool = False) -> float:
+    """Multi-step thread + timing (legacy: hard)."""
     if not is_scam:
         if "flag_scam" in trace or "escalate_to_bank" in trace:
             return 0.22 if gray else 0.0
@@ -103,28 +113,127 @@ def _raw_score_hard(is_scam: bool, trace: list[str], row: dict, gray: bool = Fal
     return score
 
 
+def _rubric_for_difficulty(
+    diff: str,
+    is_scam: bool,
+    trace: list[str],
+    row: dict[str, Any],
+    gray: bool,
+) -> float:
+    """Pick base rubric from scenario difficulty."""
+    if diff == "medium":
+        return _grade_verify_warn_chain(is_scam, trace, gray)
+    if diff == "hard":
+        return _grade_progressive_thread(is_scam, trace, row, gray)
+    return _grade_single_turn_triage(is_scam, trace, gray)
+
+
+# ---------------------------------------------------------------------------
+# Task-specific graders (semantic pools delegate to core rubrics by row difficulty)
+# ---------------------------------------------------------------------------
+
+
+def _grade_gray_boundary(is_scam: bool, trace: list[str], row: dict[str, Any], gray: bool) -> float:
+    """Ambiguous / partial-credit cases — same math as underlying difficulty."""
+    diff = str(row.get("difficulty", "easy"))
+    return _rubric_for_difficulty(diff, is_scam, trace, row, gray)
+
+
+def _grade_otp_kyc_pressure(is_scam: bool, trace: list[str], row: dict[str, Any], gray: bool) -> float:
+    """OTP / KYC pressure — uses same rubric as scenario difficulty."""
+    diff = str(row.get("difficulty", "easy"))
+    return _rubric_for_difficulty(diff, is_scam, trace, row, gray)
+
+
+def _grade_link_phishing_surface(is_scam: bool, trace: list[str], row: dict[str, Any], gray: bool) -> float:
+    """Link-bearing phishing — uses same rubric as scenario difficulty."""
+    diff = str(row.get("difficulty", "easy"))
+    return _rubric_for_difficulty(diff, is_scam, trace, row, gray)
+
+
 def grade_episode(
     task_id: str,
     action_trace: list[str],
     scenario_id: str,
     data_path: Path | None = None,
 ) -> float:
+    """
+    Score a completed episode for the given task.
+    ``task_id`` may be a legacy alias (easy/medium/hard).
+    Returns a float strictly in (0.0, 1.0).
+    """
+    canonical = resolve_task_id(task_id)
     row = load_scenario_by_id(scenario_id, data_path)
     true_label = row["true_label"]
     is_scam = true_label == "scam"
     gray = "gray_area" in (row.get("tags") or [])
 
-    if task_id == "easy":
-        raw = _raw_score_easy(is_scam, action_trace, gray)
-    elif task_id == "medium":
-        raw = _raw_score_medium(is_scam, action_trace, gray)
-    elif task_id == "hard":
-        raw = _raw_score_hard(is_scam, action_trace, row, gray)
+    if canonical == "single_turn_triage":
+        raw = _grade_single_turn_triage(is_scam, action_trace, gray)
+    elif canonical == "verify_warn_chain":
+        raw = _grade_verify_warn_chain(is_scam, action_trace, gray)
+    elif canonical == "progressive_thread":
+        raw = _grade_progressive_thread(is_scam, action_trace, row, gray)
+    elif canonical == "gray_boundary":
+        raw = _grade_gray_boundary(is_scam, action_trace, row, gray)
+    elif canonical == "otp_kyc_pressure":
+        raw = _grade_otp_kyc_pressure(is_scam, action_trace, row, gray)
+    elif canonical == "link_phishing_surface":
+        raw = _grade_link_phishing_surface(is_scam, action_trace, row, gray)
     else:
-        raise ValueError(f"Unknown task_id: {task_id}")
+        raise ValueError(f"Unknown task_id: {task_id!r} (canonical: {canonical!r})")
     return _safe_score(raw)
 
 
+def grade_single_turn_triage(
+    action_trace: list[str],
+    scenario_id: str,
+    data_path: Path | None = None,
+) -> float:
+    return grade_episode("single_turn_triage", action_trace, scenario_id, data_path)
+
+
+def grade_verify_warn_chain(
+    action_trace: list[str],
+    scenario_id: str,
+    data_path: Path | None = None,
+) -> float:
+    return grade_episode("verify_warn_chain", action_trace, scenario_id, data_path)
+
+
+def grade_progressive_thread(
+    action_trace: list[str],
+    scenario_id: str,
+    data_path: Path | None = None,
+) -> float:
+    return grade_episode("progressive_thread", action_trace, scenario_id, data_path)
+
+
+def grade_gray_boundary(
+    action_trace: list[str],
+    scenario_id: str,
+    data_path: Path | None = None,
+) -> float:
+    return grade_episode("gray_boundary", action_trace, scenario_id, data_path)
+
+
+def grade_otp_kyc_pressure(
+    action_trace: list[str],
+    scenario_id: str,
+    data_path: Path | None = None,
+) -> float:
+    return grade_episode("otp_kyc_pressure", action_trace, scenario_id, data_path)
+
+
+def grade_link_phishing_surface(
+    action_trace: list[str],
+    scenario_id: str,
+    data_path: Path | None = None,
+) -> float:
+    return grade_episode("link_phishing_surface", action_trace, scenario_id, data_path)
+
+
+# Legacy names (easy / medium / hard) for older imports and scripts.
 def grade_easy(
     action_trace: list[str],
     scenario_id: str,
@@ -149,11 +258,14 @@ def grade_hard(
     return grade_episode("hard", action_trace, scenario_id, data_path)
 
 
-# Registry: task_id → grader callable (episode-level)
+# Registry: canonical task_id → grader callable (episode-level)
 GRADERS: dict[str, object] = {
-    "easy": grade_easy,
-    "medium": grade_medium,
-    "hard": grade_hard,
+    "single_turn_triage": grade_single_turn_triage,
+    "verify_warn_chain": grade_verify_warn_chain,
+    "progressive_thread": grade_progressive_thread,
+    "gray_boundary": grade_gray_boundary,
+    "otp_kyc_pressure": grade_otp_kyc_pressure,
+    "link_phishing_surface": grade_link_phishing_surface,
 }
 
 TASK_IDS_WITH_GRADERS: tuple[str, ...] = tuple(GRADERS.keys())
@@ -165,7 +277,7 @@ def grade_action(
     scenario_id: str,
     data_path: Path | None = None,
 ) -> float:
-    """Score a completed episode; same as ``grade_episode``."""
+    """Alias for ``grade_episode`` (episode-level scoring for this env)."""
     return grade_episode(task_id, action_trace, scenario_id, data_path)
 
 
@@ -178,11 +290,20 @@ __all__ = [
     "grade_action",
     "grade_easy",
     "grade_episode",
+    "grade_gray_boundary",
     "grade_hard",
+    "grade_link_phishing_surface",
     "grade_medium",
+    "grade_otp_kyc_pressure",
+    "grade_progressive_thread",
+    "grade_single_turn_triage",
+    "grade_verify_warn_chain",
     "load_scenario_by_id",
-    "_raw_score_easy",
-    "_raw_score_hard",
-    "_raw_score_medium",
+    "_grade_gray_boundary",
+    "_grade_link_phishing_surface",
+    "_grade_otp_kyc_pressure",
+    "_grade_progressive_thread",
+    "_grade_single_turn_triage",
+    "_grade_verify_warn_chain",
     "_safe_score",
 ]

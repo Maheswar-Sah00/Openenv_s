@@ -20,11 +20,9 @@ from server.openenv_types import ScamEnvAction, ScamEnvObservation, ScamEnvState
 
 
 def _task_max_steps(task: str) -> int:
-    from tasks.easy_task import MAX_STEPS as E
-    from tasks.hard_task import MAX_STEPS as H
-    from tasks.medium_task import MAX_STEPS as M
+    from tasks.task_registry import MAX_STEPS_BY_TASK
 
-    return {"easy": E, "medium": M, "hard": H}.get(task, E)
+    return MAX_STEPS_BY_TASK.get(task, MAX_STEPS_BY_TASK["single_turn_triage"])
 
 
 class ScamOpenEnvEnvironment(Environment[ScamEnvAction, ScamEnvObservation, ScamEnvState]):

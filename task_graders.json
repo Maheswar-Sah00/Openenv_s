@@ -1,21 +1,36 @@
 {
   "spec_version": 1,
-  "description": "Three tasks; deterministic scoring in tasks/graders.py; per-task grader_*.py entry files for validators.",
+  "description": "Six tasks; deterministic scoring in tasks/graders.py; per-task grader_*.py entry files for validators.",
   "tasks": [
     {
-      "task_id": "easy",
-      "grader_module": "tasks.grader_easy",
-      "grader_file": "tasks/grader_easy.py"
+      "task_id": "single_turn_triage",
+      "grader_module": "tasks.grader_single_turn_triage",
+      "grader_file": "tasks/grader_single_turn_triage.py"
     },
     {
-      "task_id": "medium",
-      "grader_module": "tasks.grader_medium",
-      "grader_file": "tasks/grader_medium.py"
+      "task_id": "verify_warn_chain",
+      "grader_module": "tasks.grader_verify_warn_chain",
+      "grader_file": "tasks/grader_verify_warn_chain.py"
     },
     {
-      "task_id": "hard",
-      "grader_module": "tasks.grader_hard",
-      "grader_file": "tasks/grader_hard.py"
+      "task_id": "progressive_thread",
+      "grader_module": "tasks.grader_progressive_thread",
+      "grader_file": "tasks/grader_progressive_thread.py"
+    },
+    {
+      "task_id": "gray_boundary",
+      "grader_module": "tasks.grader_gray_boundary",
+      "grader_file": "tasks/grader_gray_boundary.py"
+    },
+    {
+      "task_id": "otp_kyc_pressure",
+      "grader_module": "tasks.grader_otp_kyc_pressure",
+      "grader_file": "tasks/grader_otp_kyc_pressure.py"
+    },
+    {
+      "task_id": "link_phishing_surface",
+      "grader_module": "tasks.grader_link_phishing_surface",
+      "grader_file": "tasks/grader_link_phishing_surface.py"
     }
   ]
 }

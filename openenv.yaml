@@ -38,28 +38,49 @@ reward_notes:
   step_reward: Shaped feedback for RL-style training (dense signals).
   grader_score: Deterministic per task; emitted strictly in (0,1) via tasks/graders.py; scenarios from tasks/database.py (0.01–0.99).
 
-# Scoring logic: tasks/graders.py. Per-task entry files (unique paths) satisfy static “3 graders” checks.
+# Scoring logic in tasks/graders.py; per-task grader_*.py entry files for static validators.
 tasks:
-  - id: easy
-    description: Single-turn scam vs legitimate triage; escalate or avoid false positives.
+  - id: single_turn_triage
+    description: Single-turn scam vs legitimate triage; avoid false positives on clear legitimate traffic.
     steps: 8
     ideal_action: verify_sender then warn_user then flag_scam on scams; ignore on clear legitimate.
-    grader: tasks/grader_easy.py
-  - id: medium
-    description: Multi-line scams; verification gates further thread content before full credit.
+    grader: tasks/grader_single_turn_triage.py
+  - id: verify_warn_chain
+    description: Multi-line scams; verify sender and warn user before escalating.
     steps: 12
     ideal_action: verify_sender and warn_user before flag_scam or escalate_to_bank on scams.
-    grader: tasks/grader_medium.py
-  - id: hard
+    grader: tasks/grader_verify_warn_chain.py
+  - id: progressive_thread
     description: Thread unfolds over steps; early verify and warn before terminal escalation.
     steps: 20
     ideal_action: verify_sender early, warn_user, then flag_scam or escalate_to_bank.
-    grader: tasks/grader_hard.py
+    grader: tasks/grader_progressive_thread.py
+  - id: gray_boundary
+    description: Ambiguous gray-area cases; partial credit and careful verification.
+    steps: 10
+    ideal_action: verify_sender before terminal actions; calibrate flag vs ignore.
+    grader: tasks/grader_gray_boundary.py
+  - id: otp_kyc_pressure
+    description: OTP and KYC pressure patterns; verify before trusting urgency.
+    steps: 12
+    ideal_action: verify_sender early, warn_user on scams; avoid sharing OTP or credentials.
+    grader: tasks/grader_otp_kyc_pressure.py
+  - id: link_phishing_surface
+    description: Link-bearing phishing; treat links and sender verification as high-risk signals.
+    steps: 10
+    ideal_action: verify_sender before acting; flag or escalate when scam indicators align.
+    grader: tasks/grader_link_phishing_surface.py
 
 tasks_with_graders:
-  - task_id: easy
-    grader: tasks/grader_easy.py
-  - task_id: medium
-    grader: tasks/grader_medium.py
-  - task_id: hard
-    grader: tasks/grader_hard.py
+  - task_id: single_turn_triage
+    grader: tasks/grader_single_turn_triage.py
+  - task_id: verify_warn_chain
+    grader: tasks/grader_verify_warn_chain.py
+  - task_id: progressive_thread
+    grader: tasks/grader_progressive_thread.py
+  - task_id: gray_boundary
+    grader: tasks/grader_gray_boundary.py
+  - task_id: otp_kyc_pressure
+    grader: tasks/grader_otp_kyc_pressure.py
+  - task_id: link_phishing_surface
+    grader: tasks/grader_link_phishing_surface.py

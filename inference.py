@@ -39,9 +39,7 @@ from baseline.baseline_agent import BaselineAgent
 from env.models import Action
 from env.scam_env import ScamEnv
 from tasks.graders import finalize_episode_score, grade_episode
-from tasks.easy_task import MAX_STEPS as EASY_MAX
-from tasks.hard_task import MAX_STEPS as HARD_MAX
-from tasks.medium_task import MAX_STEPS as MEDIUM_MAX
+from tasks.task_registry import CANONICAL_TASK_IDS, MAX_STEPS_BY_TASK, TASK_ALIASES
 
 # --- Config (env + argparse) ---
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
@@ -226,7 +224,7 @@ def run_episode_protocol(
     client: Any | None,
     model_label: str,
 ) -> None:
-    max_steps = {"easy": EASY_MAX, "medium": MEDIUM_MAX, "hard": HARD_MAX}[task]
+    max_steps = MAX_STEPS_BY_TASK[task]
     env = ScamEnv(task_id=task, max_steps=max_steps)
     rewards: list[float] = []
     steps_taken = 0
@@ -303,14 +301,19 @@ def main() -> None:
     max_runtime_s = float(os.getenv("SCAM_ENV_MAX_RUNTIME_SEC", "1140"))
 
     parser = argparse.ArgumentParser(description="Scam env — hackathon STDOUT protocol")
-    parser.add_argument("--task", choices=["easy", "medium", "hard"], default=os.getenv("SCAM_ENV_TASK", "easy"))
+    _task_choices = list(CANONICAL_TASK_IDS) + list(TASK_ALIASES.keys())
+    parser.add_argument(
+        "--task",
+        choices=sorted(set(_task_choices)),
+        default=os.getenv("SCAM_ENV_TASK", "easy"),
+    )
     parser.add_argument("--seed", type=int, default=int(os.getenv("SCAM_ENV_SEED", "42")))
     parser.add_argument("--scenario-id", default=os.getenv("SCAM_ENV_SCENARIO_ID") or None)
     parser.add_argument("--episodes", type=int, default=int(os.getenv("SCAM_ENV_EPISODES", "1")))
     parser.add_argument(
         "--all-tasks",
         action="store_true",
-        help="Run one episode each: easy, medium, hard (pre-submission smoke test)",
+        help="Run one episode per canonical task (six tasks; pre-submission smoke test)",
     )
     parser.add_argument(
         "--agent",
@@ -339,7 +342,7 @@ def main() -> None:
         print(f"[DEBUG] LOCAL_IMAGE_NAME={LOCAL_IMAGE_NAME} (not used; in-process ScamEnv)", file=sys.stderr)
 
     if args.all_tasks:
-        task_list = ["easy", "medium", "hard"]
+        task_list = list(CANONICAL_TASK_IDS)
         episodes_per = 1
     else:
         task_list = [args.task]
