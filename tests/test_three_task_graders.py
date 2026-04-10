@@ -1,4 +1,4 @@
-"""Ensure canonical tasks/graders.py and three tasks are wired for Phase 2 checks."""
+"""Ensure tasks/graders.py, tasks/database.py, and manifests match Phase 2 checks."""
 
 from __future__ import annotations
 
@@ -16,21 +16,23 @@ class TestThreeTaskGraders(unittest.TestCase):
     def test_tasks_graders_module_is_canonical(self) -> None:
         m = importlib.import_module("tasks.graders")
         self.assertEqual(m.TASK_IDS_WITH_GRADERS, ("easy", "medium", "hard"))
+        self.assertEqual(set(m.GRADERS.keys()), {"easy", "medium", "hard"})
         self.assertTrue(callable(m.grade_action))
         self.assertTrue(callable(m.grade_episode))
-        self.assertTrue(callable(m._grade_easy))
-        self.assertTrue(callable(m._grade_medium))
-        self.assertTrue(callable(m._grade_hard))
+        self.assertTrue(callable(m.grade_easy))
+        self.assertTrue(callable(m.grade_medium))
+        self.assertTrue(callable(m.grade_hard))
 
-    def test_legacy_grader_wrappers_still_work(self) -> None:
-        for mod_name, expected_id in (
-            ("graders.easy_grader", "easy"),
-            ("graders.medium_grader", "medium"),
-            ("graders.hard_grader", "hard"),
-        ):
-            m = importlib.import_module(mod_name)
-            self.assertEqual(getattr(m, "TASK_ID"), expected_id, mod_name)
-            self.assertTrue(callable(getattr(m, "grade")), f"{mod_name}.grade missing")
+    def test_tasks_database_exists(self) -> None:
+        db = importlib.import_module("tasks.database")
+        self.assertTrue(hasattr(db, "load_scenario_by_id"))
+        self.assertTrue((ROOT / "tasks" / "database.py").is_file())
+
+    def test_graders_package_shim(self) -> None:
+        from graders import grade_episode as ge_shim
+        from tasks.graders import grade_episode as ge_canon
+
+        self.assertIs(ge_shim, ge_canon)
 
     def test_grade_returns_strict_open_interval(self) -> None:
         from tasks.graders import grade_action

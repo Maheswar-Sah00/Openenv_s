@@ -36,7 +36,7 @@ observation_keys:
 
 reward_notes:
   step_reward: Shaped feedback for RL-style training (dense signals).
-  grader_score: Deterministic per task; emitted strictly in (0,1) via tasks/graders.py → graders/scam_grader.py (0.01–0.99).
+  grader_score: Deterministic per task; emitted strictly in (0,1) via tasks/graders.py; scenarios from tasks/database.py (0.01–0.99).
 
 # tasks/graders.py is the canonical grader module (community layout); all three tasks delegate there.
 tasks:
