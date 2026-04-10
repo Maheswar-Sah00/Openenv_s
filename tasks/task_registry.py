@@ -1,4 +1,4 @@
-"""Canonical task ids, legacy aliases, max steps, and dataset pool rules."""
+"""Canonical task ids, legacy aliases, max steps, dataset pool rules, grader entry paths."""
 
 from __future__ import annotations
 
@@ -34,6 +34,20 @@ MAX_STEPS_BY_TASK: dict[str, int] = {
 for _alias, _canon in TASK_ALIASES.items():
     MAX_STEPS_BY_TASK[_alias] = MAX_STEPS_BY_TASK[_canon]
 
+# Implementation lives in tasks/graders.py. Three entry files satisfy validators that count unique grader paths.
+CANONICAL_GRADER_FILE = "tasks/graders.py"
+CANONICAL_GRADER_MODULE = "tasks.graders"
+
+# task_id -> (grader_file, grader_module) for manifests / task_graders.json
+TASK_GRADER_ENTRY: dict[str, tuple[str, str]] = {
+    "single_turn_triage": ("tasks/grader_easy.py", "tasks.grader_easy"),
+    "gray_boundary": ("tasks/grader_easy.py", "tasks.grader_easy"),
+    "verify_warn_chain": ("tasks/grader_medium.py", "tasks.grader_medium"),
+    "otp_kyc_pressure": ("tasks/grader_medium.py", "tasks.grader_medium"),
+    "progressive_thread": ("tasks/grader_hard.py", "tasks.grader_hard"),
+    "link_phishing_surface": ("tasks/grader_hard.py", "tasks.grader_hard"),
+}
+
 
 def resolve_task_id(task_id: str) -> str:
     """Return canonical task id (legacy aliases resolved)."""
@@ -41,18 +55,19 @@ def resolve_task_id(task_id: str) -> str:
     return TASK_ALIASES.get(t, t)
 
 
-# Single canonical grader module (DaddyCoder-style); all tasks dispatch inside tasks.graders.
-CANONICAL_GRADER_FILE = "tasks/graders.py"
-CANONICAL_GRADER_MODULE = "tasks.graders"
+def grader_file_for(canonical_task_id: str | None = None) -> str:
+    """Relative path used in openenv.yaml / task_graders.json (per-task entry file)."""
+    if not canonical_task_id:
+        return CANONICAL_GRADER_FILE
+    c = resolve_task_id(canonical_task_id)
+    return TASK_GRADER_ENTRY[c][0]
 
 
-def grader_file_for(_canonical_task_id: str | None = None) -> str:
-    """Relative path for manifests; all tasks share tasks/graders.py."""
-    return CANONICAL_GRADER_FILE
-
-
-def grader_module_for(_canonical_task_id: str | None = None) -> str:
-    return CANONICAL_GRADER_MODULE
+def grader_module_for(canonical_task_id: str | None = None) -> str:
+    if not canonical_task_id:
+        return CANONICAL_GRADER_MODULE
+    c = resolve_task_id(canonical_task_id)
+    return TASK_GRADER_ENTRY[c][1]
 
 
 def _joined_text(row: dict[str, Any]) -> str:
@@ -92,6 +107,7 @@ __all__ = [
     "CANONICAL_TASK_IDS",
     "MAX_STEPS_BY_TASK",
     "TASK_ALIASES",
+    "TASK_GRADER_ENTRY",
     "grader_file_for",
     "grader_module_for",
     "resolve_task_id",

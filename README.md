@@ -30,9 +30,9 @@ These map to the **deep validation** steps in the hackathon dashboard (Docker bu
 | **Docker build creation** | Image builds from repo root. | [`Dockerfile`](Dockerfile): Python 3.11-slim, `pip install -r requirements.txt`, `EXPOSE 7860`, `CMD` runs `uvicorn server.app:app` on `${PORT:-7860}`. |
 | **`inference.py` execution** | Script runs inside the built image without extra setup. | `docker run --rm <image> python inference.py ...` works; dependencies in [`requirements.txt`](requirements.txt). |
 | **Output parsing** | Stdout lines match the required protocol so logs can be scored. | Only **`[START]`**, **`[STEP]`**, **`[END]`** on stdout per episode; **`score=`** with **three** decimal places on `[END]`. See [Output protocol](#output-protocol-judge-parsing) below. |
-| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | **Six** canonical tasks; **all** scoring in one file [`tasks/graders.py`](tasks/graders.py) (`GRADERS`, `grade_episode`, sectioned `_grade_*` helpers). [`tasks/task_registry.py`](tasks/task_registry.py) defines pools and steps. [`openenv.yaml`](openenv.yaml) and [`task_graders.json`](task_graders.json) reference **`tasks/graders.py`** per task. Legacy aliases **`easy` / `medium` / `hard`**. Scores **0.01–0.99**. |
+| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | **Six** canonical tasks; **all** scoring logic in [`tasks/graders.py`](tasks/graders.py). **Three** manifest grader entry files — [`tasks/grader_easy.py`](tasks/grader_easy.py), [`tasks/grader_medium.py`](tasks/grader_medium.py), [`tasks/grader_hard.py`](tasks/grader_hard.py) — each re-export `grade_episode` so validators that count **unique** `grader:` paths see **≥3** files while six tasks map two-per-file. [`tasks/task_registry.py`](tasks/task_registry.py) maps task ids → entry path. Legacy aliases **`easy` / `medium` / `hard`**. Scores **0.01–0.99**. |
 
-**Why “Not enough tasks with graders” appears:** ensure **`openenv.yaml`** lists enough **`tasks:`** rows with a **`grader:`** path and that **`tasks.graders.GRADERS`** exposes one entry per task id.
+**Why “Not enough tasks with graders” appears:** dashboards may count **unique grader file paths** — a single shared `tasks/graders.py` for every task can look like **one** grader. Ensure **`openenv.yaml`** lists **`tasks:`** with distinct paths as above, and that **`tasks.graders.GRADERS`** has one entry per task id.
 
 | **LLM criteria check** | Model calls go through the **injected LiteLLM proxy** (observed API usage). | `inference.py` builds `OpenAI(base_url=os.getenv("API_BASE_URL", ...), api_key=os.getenv("API_KEY") or os.getenv("HF_TOKEN"))`. Default agent is **`llm`** when **`API_KEY`** or **`HF_TOKEN`** is set — **do not** hardcode keys or swap in a private base URL for official eval. |
 
@@ -126,7 +126,7 @@ Schema version and keys are declared in [`openenv.yaml`](openenv.yaml).
 
 **Legacy aliases:** `easy` → `single_turn_triage`, `medium` → `verify_warn_chain`, `hard` → `progressive_thread`.
 
-**Grader:** [`tasks/graders.py`](tasks/graders.py) only (episode-level `grade_episode`). **`inference.py --all-tasks`** runs **one episode per canonical task** (six). [`tasks/database.py`](tasks/database.py) loads rows from `data/scam_dataset.json`.
+**Grader:** Episode scoring is implemented in [`tasks/graders.py`](tasks/graders.py) (`grade_episode`); manifests use the three thin entry modules under `tasks/grader_*.py`. **`inference.py --all-tasks`** runs **one episode per canonical task** (six). [`tasks/database.py`](tasks/database.py) loads rows from `data/scam_dataset.json`.
 
 ---
 
@@ -243,9 +243,10 @@ Other useful vars: `SCAM_ENV_MAX_RUNTIME_SEC` (default **1140**), `SUCCESS_SCORE
 |---------|---------|
 | `python -m py_compile inference.py` | Syntax check. |
 | `python inference.py --agent baseline --all-tasks --seed 42` | End-to-end stdout protocol + grader. |
+| `./validator.bash https://<user>-<space>.hf.space` | Full flow: [`scripts/validate-submission.sh`](scripts/validate-submission.sh) (HF `POST /reset`, `docker build`, `openenv validate`) **then** local grader checks (Step 4). Omit the URL to run **Step 4 only** (no network). |
 | `openenv validate` (with `openenv-core[cli]`) | Manifest + layout vs [`openenv.yaml`](openenv.yaml). |
-| `python -m unittest tests.test_task_graders -v` | `tasks/graders.py`, `openenv.yaml`, `task_graders.json`. |
-| `python scripts/verify_task_graders.py` | Quick check: ≥3 tasks, `tasks/graders.py` on disk. |
+| `python -m unittest tests.test_task_graders -v` | `tasks/graders.py`, `openenv.yaml`, `task_graders.json`, three grader entry paths. |
+| `python scripts/verify_task_graders.py` | ≥3 tasks, ≥3 unique `grader_file` paths, `tasks/graders.py` on disk. |
 | `python scripts/validate_dataset.py` | Dataset schema. |
 | `docker build -t scam-detection-env .` | Same as Phase 2 **Docker build**. |
 | `python scripts/hf_smoke_check.py https://YOUR-SPACE.hf.space` | `POST /reset` + `POST /step`. |
@@ -261,13 +262,14 @@ scam-env/
 ├── Dockerfile             # Phase 2 container build
 ├── requirements.txt
 ├── inference.py           # Benchmark driver + stdout protocol
-├── validator.bash         # local preflight (unittest + optional openenv validate)
+├── validator.bash         # delegates to validate-submission.sh + Step 4 grader checks
 ├── assets/                # optional assets
 ├── outputs/               # optional run outputs
 ├── env/                   # ScamEnv, models, step rewards
 ├── tasks/                 # task ids, budgets, database.py, graders
 ├── tasks/database.py      # load_scenario_by_id → scam_dataset.json
-├── tasks/graders.py       # GRADERS + grade_episode + sectioned _grade_* helpers (single module)
+├── tasks/grader_easy.py   # + grader_medium.py, grader_hard.py — entry files re-exporting grade_episode
+├── tasks/graders.py       # GRADERS + grade_episode + sectioned _grade_* helpers (implementation)
 ├── tasks/task_registry.py # canonical ids, aliases, pools, MAX_STEPS
 ├── graders/               # optional shim re-exporting tasks.graders
 ├── task_graders.json      # Machine-readable six-task grader registry

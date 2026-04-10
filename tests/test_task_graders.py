@@ -1,4 +1,4 @@
-"""Ensure tasks/graders.py, task_registry, and manifests match Phase 2 checks (single grader file)."""
+"""Ensure tasks/graders.py, task_registry, and manifests agree (three grader entry files, six tasks)."""
 
 from __future__ import annotations
 
@@ -10,14 +10,21 @@ from pathlib import Path
 import yaml
 
 from tasks.task_registry import (
-    CANONICAL_GRADER_FILE,
     CANONICAL_TASK_IDS,
+    TASK_GRADER_ENTRY,
     grader_file_for,
+    grader_module_for,
     resolve_task_id,
     scenario_in_task_pool,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
+
+EXPECTED_UNIQUE_GRADER_FILES = {
+    "tasks/grader_easy.py",
+    "tasks/grader_medium.py",
+    "tasks/grader_hard.py",
+}
 
 
 class TestTaskGraders(unittest.TestCase):
@@ -57,7 +64,7 @@ class TestTaskGraders(unittest.TestCase):
         self.assertEqual(resolve_task_id("medium"), "verify_warn_chain")
         self.assertEqual(resolve_task_id("hard"), "progressive_thread")
 
-    def test_openenv_yaml_lists_six_tasks_all_use_tasks_graders_py(self) -> None:
+    def test_openenv_yaml_lists_six_tasks_three_unique_grader_paths(self) -> None:
         raw = (ROOT / "openenv.yaml").read_text(encoding="utf-8")
         doc = yaml.safe_load(raw)
         self.assertIsInstance(doc, dict)
@@ -76,14 +83,14 @@ class TestTaskGraders(unittest.TestCase):
             norm = g.replace("\\", "/")
             self.assertEqual(
                 norm,
-                CANONICAL_GRADER_FILE,
-                f"task {tid} should point at {CANONICAL_GRADER_FILE}, got {g}",
+                grader_file_for(tid),
+                f"task {tid} grader path should match task_registry",
             )
             paths.add(norm)
             path = ROOT / norm
             self.assertTrue(path.is_file(), f"grader file missing: {path}")
         self.assertEqual(set(ids), set(CANONICAL_TASK_IDS))
-        self.assertEqual(paths, {CANONICAL_GRADER_FILE})
+        self.assertEqual(paths, EXPECTED_UNIQUE_GRADER_FILES)
 
     def test_task_graders_json_matches(self) -> None:
         doc = json.loads((ROOT / "task_graders.json").read_text(encoding="utf-8"))
@@ -95,20 +102,25 @@ class TestTaskGraders(unittest.TestCase):
             rel = row.get("grader_file")
             mod = row.get("grader_module")
             self.assertIsNotNone(tid)
-            self.assertEqual(rel.replace("\\", "/"), CANONICAL_GRADER_FILE)
-            self.assertEqual(mod, "tasks.graders")
+            self.assertEqual(rel.replace("\\", "/"), grader_file_for(tid))
+            self.assertEqual(mod, grader_module_for(tid))
             self.assertTrue((ROOT / rel).is_file())
             files.add(rel.replace("\\", "/"))
-        self.assertEqual(files, {CANONICAL_GRADER_FILE})
+        self.assertEqual(files, EXPECTED_UNIQUE_GRADER_FILES)
 
-    def test_legacy_task_packages_reference_graders_py(self) -> None:
+    def test_task_registry_maps_six_tasks_to_three_paths(self) -> None:
+        self.assertEqual(len(TASK_GRADER_ENTRY), 6)
+        paths = {TASK_GRADER_ENTRY[t][0] for t in CANONICAL_TASK_IDS}
+        self.assertEqual(paths, EXPECTED_UNIQUE_GRADER_FILES)
+
+    def test_legacy_task_packages_reference_tier_grader_files(self) -> None:
         from tasks.easy_task import GRADER_FILE as e
         from tasks.hard_task import GRADER_FILE as h
         from tasks.medium_task import GRADER_FILE as m
 
-        for rel in (e, m, h):
-            self.assertEqual(rel.replace("\\", "/"), CANONICAL_GRADER_FILE)
-            self.assertEqual(grader_file_for(), CANONICAL_GRADER_FILE)
+        self.assertEqual(e.replace("\\", "/"), grader_file_for("single_turn_triage"))
+        self.assertEqual(m.replace("\\", "/"), grader_file_for("verify_warn_chain"))
+        self.assertEqual(h.replace("\\", "/"), grader_file_for("progressive_thread"))
 
     def test_graders_exports_per_task_callables(self) -> None:
         from tasks.graders import grade_single_turn_triage, grade_verify_warn_chain
