@@ -43,31 +43,37 @@ tasks:
   - id: single_turn_triage
     description: Single-turn scam vs legitimate triage; avoid false positives on clear legitimate traffic.
     steps: 8
+    score_range: [0.001, 0.999]
     ideal_action: verify_sender then warn_user then flag_scam on scams; ignore on clear legitimate.
     grader: tasks/grader_easy.py
   - id: verify_warn_chain
     description: Multi-line scams; verify sender and warn user before escalating.
     steps: 12
+    score_range: [0.001, 0.999]
     ideal_action: verify_sender and warn_user before flag_scam or escalate_to_bank on scams.
     grader: tasks/grader_medium.py
   - id: progressive_thread
     description: Thread unfolds over steps; early verify and warn before terminal escalation.
     steps: 20
+    score_range: [0.001, 0.999]
     ideal_action: verify_sender early, warn_user, then flag_scam or escalate_to_bank.
     grader: tasks/grader_hard.py
   - id: gray_boundary
     description: Ambiguous gray-area cases; partial credit and careful verification.
     steps: 10
+    score_range: [0.001, 0.999]
     ideal_action: verify_sender before terminal actions; calibrate flag vs ignore.
     grader: tasks/grader_easy.py
   - id: otp_kyc_pressure
     description: OTP and KYC pressure patterns; verify before trusting urgency.
     steps: 12
+    score_range: [0.001, 0.999]
     ideal_action: verify_sender early, warn_user on scams; avoid sharing OTP or credentials.
     grader: tasks/grader_medium.py
   - id: link_phishing_surface
     description: Link-bearing phishing; treat links and sender verification as high-risk signals.
     steps: 10
+    score_range: [0.001, 0.999]
     ideal_action: verify_sender before acting; flag or escalate when scam indicators align.
     grader: tasks/grader_hard.py
 
