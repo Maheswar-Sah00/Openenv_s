@@ -166,7 +166,3 @@ Invoke-WebRequest -Uri "https://YOUR-SPACE.hf.space/reset" -Method POST `
 ```
 
 ---
-
-## License
-
-Hackathon / educational use unless otherwise specified.
