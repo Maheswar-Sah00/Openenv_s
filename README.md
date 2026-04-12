@@ -13,322 +13,160 @@ tags:
   - reinforcement-learning
 ---
 
-# 🛡️ Scam Detection — Fraud Analyst OpenEnv
+# Scam Detection OpenEnv
 
-> _“A message arrives. You have a limited budget of steps. Triage, verify, warn — or miss the scam.”_
-
-**Scam Detection** is an **OpenEnv-compliant** environment where agents act as **bank/fintech fraud analysts**: discrete actions over a structured observation, **step rewards** for RL-style training, and a **deterministic grader** in **[0.0, 1.0]** per episode.
+OpenEnv-compatible environment for **bank/fintech fraud analyst** simulation: discrete actions over a structured observation, step rewards for RL-style training, and a deterministic episode grader. Agents run via [`inference.py`](inference.py) (stdout protocol) or against the **FastAPI** server in [`server/`](server/).
 
 ---
 
-## ✅ Phase 2 validation (organizer checks)
+## Requirements
 
-These map to the **deep validation** steps in the hackathon dashboard (Docker build → inference → parsing → task logic → LLM/proxy).
-
-| Check | What the judge expects | How this repo satisfies it |
-|-------|------------------------|----------------------------|
-| **Docker build creation** | Image builds from repo root. | [`Dockerfile`](Dockerfile): Python 3.11-slim, `pip install -r requirements.txt`, `EXPOSE 7860`, `CMD` runs `uvicorn server.app:app` on `${PORT:-7860}`. |
-| **`inference.py` execution** | Script runs inside the built image without extra setup. | `docker run --rm <image> python inference.py ...` works; dependencies in [`requirements.txt`](requirements.txt). |
-| **Output parsing** | Stdout lines match the required protocol so logs can be scored. | Only **`[START]`**, **`[STEP]`**, **`[END]`** on stdout per episode; **`score=`** with **two** decimal places on `[END]`. See [Output protocol](#output-protocol-judge-parsing) below. |
-| **Task validation** | At least **3 tasks** with graders; each task score **strictly in (0, 1)** (not `0.0` / `1.0`). | **Six** canonical tasks in **`openenv.yaml`** / **`task_graders.json`**, all using one grader file [`tasks/graders.py`](tasks/graders.py) and **`tasks.graders.GRADERS`** (one entry per task id). Legacy aliases **`easy` / `medium` / `hard`**. Scores **0.01–0.99**. |
-
-**Why “Not enough tasks with graders” can still appear:** some dashboards count **unique grader file paths** (one file → one path). This repo uses a **single** `tasks/graders.py` and satisfies multi-task evidence in **logs**: [`inference.py`](inference.py) runs **at least three** full `[START]` … `[END]` blocks by default (same `--task`, bumped `--episodes`), and **`--all-tasks`** runs six episodes—so stdout shows multiple scored runs. Ensure **`tasks.graders.GRADERS`** covers every **`tasks:`** id in **`openenv.yaml`**.
-
-| **LLM criteria check** | Model calls go through the **injected LiteLLM proxy** (observed API usage). | `inference.py` builds `OpenAI(base_url=os.getenv("API_BASE_URL", ...), api_key=os.getenv("API_KEY") or os.getenv("HF_TOKEN"))`. Default agent is **`llm`** when **`API_KEY`** or **`HF_TOKEN`** is set — **do not** hardcode keys or swap in a private base URL for official eval. |
-
-**Local preflight (mirrors organizer flow):**
-
-```bash
-docker build -t scam-detection-env .
-docker run --rm scam-detection-env python inference.py --agent baseline --task easy --episodes 1 --seed 42
-docker run --rm -p 7860:7860 -e PORT=7860 scam-detection-env
-# then: curl -s -o NUL -w "%{http_code}\n" -X POST http://127.0.0.1:7860/reset -H "Content-Type: application/json" -d "{}"
-```
+- **Python 3.11+** (matches [`Dockerfile`](Dockerfile))
+- **pip**
+- Optional: **Docker** (same image as Hugging Face Space)
+- Optional: **`openenv-core[cli]`** for `openenv validate`
 
 ---
 
-## 🧠 Why this environment exists
+## Install
 
-Scams move across **SMS, email, WhatsApp, and in-app** channels. Analysts must:
-
-* **Verify** before trusting urgent messages.
-* **Warn** users without crying wolf on legitimate traffic.
-* **Escalate or flag** under time pressure when the thread **unfolds over steps** (hard tasks).
-
-This env standardizes that loop for **benchmarking LLMs and RL agents** — same observation schema, same action set, same grader — so scores are comparable across models.
-
----
-
-## ⚙️ Environment design
-
-### How it works
-
-```
-Agent / inference.py              ScamEnv (in-process or via HTTP)
-        │                                    │
-        │── reset(seed, scenario_id?) ───────▶│  Case loaded from dataset
-        │◀─ observation + info ───────────────│  (message, channel, risk hints, …)
-        │                                    │
-        │── step(action) ───────────────────▶│  State + reward + done
-        │◀───────────────────────────────────│  Grader score at episode end
-        │         [repeat until terminal      │
-        │          or max_steps]             │
-```
-
-**HTTP mode (HF Space):** OpenEnv FastAPI exposes **`POST /reset`**, **`POST /step`**, **`GET /state`**, **`/docs`**. The validator pings **`POST /reset`** → **200**.
-
-### Observation space (agent-visible)
-
-Schema version and keys are declared in [`openenv.yaml`](openenv.yaml).
-
-| Field | Meaning |
-|--------|---------|
-| `case_id` | Stable scenario id (graders reload metadata by id). |
-| `message_text` | Latest visible line in the thread. |
-| `conversation_history` | All lines revealed so far. |
-| `sender_type` | e.g. `unknown`, `bank_official`. |
-| `channel` | `sms`, `email`, `whatsapp`, `in_app`. |
-| `link_present` | Visible content references a link. |
-| `urgency_score` | 0–1 pressure heuristic from scenario data. |
-| `sender_verified` | `null` until `verify_sender`; then `true`/`false` vs ground truth. |
-| `risk_score` | Analyst-facing score. |
-| `risk_factors` | Explainability strings (e.g. `otp_keyword_present`). |
-| `steps_taken` / `max_episode_steps` | Horizon. |
-| `terminal_actions` | Which actions end the episode. |
-
-**Hidden:** dataset `true_label` and internal stages — rewards/graders only.
-
-### Action space
-
-| Action | Notes |
-|--------|--------|
-| `ignore` | Terminal — close case. |
-| `verify_sender` | Updates `sender_verified`. |
-| `warn_user` | Customer warning. |
-| `flag_scam` | Terminal. |
-| `block_sender` | Terminal. |
-| `escalate_to_bank` | Terminal. |
-
-**Reveal rules:** easy = full thread immediately; medium = more lines after `verify_sender` on scams; hard = **one new line per non-terminal step**.
-
----
-
-## 🎯 Tasks
-
-| Canonical task ID | Pool (dataset) | Core requirement |
-|-------------------|----------------|------------------|
-| `single_turn_triage` | `difficulty == easy` | One-shot scam vs legitimate; avoid false positives. |
-| `verify_warn_chain` | `difficulty == medium` | **`verify_sender`** + **`warn_user`** before full credit; gated content. |
-| `progressive_thread` | `difficulty == hard` | Thread unfolds stepwise; early verify + warn; OTP timing in grader. |
-| `gray_boundary` | `gray_area` tag | Ambiguous cases; partial credit. |
-| `otp_kyc_pressure` | OTP/KYC tags or text | Pressure / account-verify patterns. |
-| `link_phishing_surface` | `link_present` | Link-bearing phishing surface. |
-
-**Legacy aliases:** `easy` → `single_turn_triage`, `medium` → `verify_warn_chain`, `hard` → `progressive_thread`.
-
-**Grader:** [`tasks/graders.py`](tasks/graders.py) only (`grade_episode`, `GRADERS`). **`inference.py --all-tasks`** runs **one episode per canonical task** (six). By default (single task), **`inference.py`** runs **at least three** episodes so logs contain three full protocol cycles. [`tasks/database.py`](tasks/database.py) loads rows from `data/scam_dataset.json`.
-
----
-
-## 🏆 Rewards
-
-**Step rewards** ([`env/reward.py`](env/reward.py)) — dense signal for RL; **not** the official competition scalar:
-
-| Signal | Typical range |
-|--------|----------------|
-| Completed verification | **+0.3** |
-| Correct scam terminal | **+1.0** |
-| False alarm on legitimate | **−0.5** |
-| Missed scam (`ignore`) | **−1.0** |
-
-**Episode score:** grader output in **[0, 1]** on the `[END]` line.
-
----
-
-## 📋 Output protocol (judge parsing)
-
-**Only these stdout lines**, in order, per episode:
-
-1. `[START] task=<task> env=<benchmark> model=<model_name>`
-2. `[STEP] step=<n> action=<action> reward=<0.00> done=<true|false> error=<msg|null>`
-3. `[END] success=<true|false> steps=<n> score=<0.00> rewards=<r1,r2,...>`
-
-* `score` uses **exactly two** fractional digits; value is **strictly between 0 and 1** (grader clamps to **0.01–0.99**, so e.g. `score=0.99` not `score=1.00`).
-* `done` / `success` are lowercase `true` or `false`.
-* `error=` is the literal `null` or a single-line message.
-
-Implementation: [`inference.py`](inference.py) (`log_start`, `log_step`, `log_end`).
-
----
-
-## 📡 API reference (HTTP / OpenEnv)
-
-Interactive docs: **`/docs`** on the running server.
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/reset` | Start episode (empty body `{}` OK for validator). |
-| POST | `/step` | Send action, e.g. `{"action": {"action": "verify_sender", "metadata": {}}}`. |
-| GET | `/state` | Current observation / episode metadata (OpenEnv). |
-| GET | `/` | Small JSON: `ok`, `env`, `docs` path. |
-| GET | `/docs` | Swagger UI. |
-
----
-
-## 🚀 Quick start
-
-### 1. Installation
+Clone the repo and install dependencies from the repository root (`scam-env/` — the directory that contains `requirements.txt` and `Dockerfile`).
 
 ```bash
 cd scam-env
 pip install -r requirements.txt
 ```
 
-(Optional: `uv sync` if you use `uv` + `pyproject.toml`.)
+You do not need to set `PYTHONPATH` for `inference.py`; it adds the project root automatically.
 
-### 2. Environment variables (LLM / hackathon)
+---
 
-| Variable | Role |
-|----------|------|
-| `API_BASE_URL` | Injected LiteLLM / OpenAI-compatible base URL. |
-| `API_KEY` | Injected proxy key (**preferred**). |
-| `HF_TOKEN` | Local Hugging Face router only (fallback). |
-| `MODEL_NAME` | Chat model id. |
-| `SCAM_ENV_AGENT` | `llm` or `baseline` (default: **llm** if any key is set, else **baseline**). |
+## Run locally
 
-### 3. Run the server (local)
+### API server
 
 ```bash
 uvicorn server.app:app --host 127.0.0.1 --port 7860
 ```
 
-### 4. Docker
+Open [http://127.0.0.1:7860/docs](http://127.0.0.1:7860/docs) for interactive API docs. Main endpoints: `POST /reset`, `POST /step`, `GET /state`.
+
+### Inference (baseline, no API keys)
+
+```bash
+python inference.py --agent baseline --task easy --seed 42
+```
+
+For a **single** `--task`, the driver runs **at least three** full episodes by default (three `[START]` … `[END]` blocks on stdout), even if you pass `--episodes 1`.
+
+Run one episode per canonical task (six tasks):
+
+```bash
+python inference.py --agent baseline --all-tasks --seed 42
+```
+
+### Inference (LLM agent)
+
+Set an OpenAI-compatible base URL and key (hackathon eval typically injects these):
+
+| Variable | Description |
+|----------|-------------|
+| `API_BASE_URL` | Base URL for chat completions (e.g. LiteLLM proxy) |
+| `API_KEY` | API key (preferred) |
+| `HF_TOKEN` | Fallback for local Hugging Face router |
+| `MODEL_NAME` | Model id for chat completions |
+
+**Bash:**
+
+```bash
+export API_BASE_URL="https://router.huggingface.co/v1"
+export API_KEY="your_token_here"
+export MODEL_NAME="Qwen/Qwen2.5-72B-Instruct"
+python inference.py --agent llm --task easy --seed 42
+```
+
+**PowerShell:**
+
+```powershell
+$env:API_BASE_URL = "https://router.huggingface.co/v1"
+$env:API_KEY = "your_token_here"
+$env:MODEL_NAME = "Qwen/Qwen2.5-72B-Instruct"
+python inference.py --agent llm --task easy --seed 42
+```
+
+Optional: `SCAM_ENV_AGENT=baseline` or `llm` overrides the default agent choice. See [`inference.py`](inference.py) for `SCAM_ENV_*` tuning (timeouts, retries, JSON mode, debug).
+
+---
+
+## Docker
 
 ```bash
 docker build -t scam-detection-env .
 docker run --rm -p 7860:7860 -e PORT=7860 scam-detection-env
 ```
 
-### 5. Run `inference.py`
-
-**Baseline (no API key):**
+Run inference inside the image:
 
 ```bash
-python inference.py --agent baseline --task easy --episodes 1 --seed 42
-python inference.py --agent baseline --all-tasks --seed 42
+docker run --rm scam-detection-env python inference.py --agent baseline --task easy --seed 42
 ```
-
-**LLM (example — local HF router):**
-
-```bash
-set API_KEY=your_token_here
-set API_BASE_URL=https://router.huggingface.co/v1
-set MODEL_NAME=Qwen/Qwen2.5-72B-Instruct
-python inference.py --agent llm --task easy --episodes 1 --seed 42
-```
-
-**Inside the container:**
-
-```bash
-docker run --rm scam-detection-env python inference.py --agent baseline --task easy --episodes 1
-```
-
-Other useful vars: `SCAM_ENV_MAX_RUNTIME_SEC` (default **1140**), `SUCCESS_SCORE_THRESHOLD`, `SCAM_ENV_LLM_MAX_RETRIES`, `SCAM_ENV_LLM_JSON_MODE`, `SCAM_ENV_DEBUG`.
 
 ---
 
-## 🧪 Testing & validation
+## Validate and test
 
 | Command | Purpose |
 |---------|---------|
-| `python -m py_compile inference.py` | Syntax check. |
-| `python inference.py --agent baseline --all-tasks --seed 42` | End-to-end stdout protocol + grader. |
-| `./validator.bash https://<user>-<space>.hf.space` | Full flow: [`scripts/validate-submission.sh`](scripts/validate-submission.sh) (HF `POST /reset`, `docker build`, `openenv validate`) **then** local grader checks (Step 4). Omit the URL to run **Step 4 only** (no network). |
-| `openenv validate` (with `openenv-core[cli]`) | Manifest + layout vs [`openenv.yaml`](openenv.yaml). |
-| `python -m unittest tests.test_task_graders -v` | `tasks/graders.py`, `openenv.yaml`, `task_graders.json`. |
-| `python scripts/verify_task_graders.py` | ≥3 tasks, each `grader_file` exists, `tasks/graders.py` on disk. |
-| `python scripts/validate_dataset.py` | Dataset schema. |
-| `docker build -t scam-detection-env .` | Same as Phase 2 **Docker build**. |
-| `python scripts/hf_smoke_check.py https://YOUR-SPACE.hf.space` | `POST /reset` + `POST /step`. |
-| [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | CI: install, inference, validate, docker build. |
+| `python -m py_compile inference.py` | Quick syntax check |
+| `python scripts/verify_task_graders.py` | Task / grader manifest sanity check |
+| `python -m unittest tests.test_task_graders -v` | Grader + `openenv.yaml` / `task_graders.json` tests |
+| `openenv validate` | Requires `pip install "openenv-core[cli]"` — checks [`openenv.yaml`](openenv.yaml) |
 
----
-
-## 📁 Project structure
-
-```
-scam-env/
-├── openenv.yaml           # OpenEnv manifest (validate / HF)
-├── Dockerfile             # Phase 2 container build
-├── requirements.txt
-├── inference.py           # Benchmark driver + stdout protocol
-├── validator.bash         # delegates to validate-submission.sh + Step 4 grader checks
-├── assets/                # optional assets
-├── outputs/               # optional run outputs
-├── env/                   # ScamEnv, models, step rewards
-├── tasks/                 # task ids, budgets, database.py, graders
-├── tasks/database.py      # load_scenario_by_id → scam_dataset.json
-├── tasks/graders.py       # GRADERS + grade_episode + sectioned _grade_* helpers (single module)
-├── tasks/task_registry.py # canonical ids, aliases, pools, MAX_STEPS
-├── graders/               # optional shim re-exporting tasks.graders
-├── task_graders.json      # Machine-readable six-task grader registry
-├── tests/                 # unittest: tasks/graders + manifest
-├── data/                  # scam_dataset.json
-├── baseline/              # Rule-based agent
-├── server/                # FastAPI (create_app) + OpenEnv types
-└── scripts/               # dataset, eval export, smoke checks, validate-submission
-```
-
----
-
-## 🌐 Hugging Face Spaces
-
-Frontmatter YAML configures the Space card. Use **Docker** SDK, **port 7860**, repo **root** = this folder (same level as `Dockerfile` and `openenv.yaml`).
-
-1. Create Space → Docker → import from GitHub or `git remote add` + `git push` to `https://huggingface.co/spaces/<user>/<slug>`.
-2. After deploy: `https://<user>-<space>.hf.space/docs`.
-
-**Ping check:**
+**Full submission-style check** (HF ping, `docker build`, `openenv validate`, then local grader tests): run [`scripts/validate-submission.sh`](scripts/validate-submission.sh) with your Space URL, or [`validator.bash`](validator.bash) from repo root on Git Bash / WSL / Linux:
 
 ```bash
-curl -s -o NUL -w "%{http_code}\n" -X POST https://YOUR-SPACE.hf.space/reset -H "Content-Type: application/json" -d "{}"
+./validator.bash https://YOUR-USER-YOUR-SPACE.hf.space
 ```
 
-(Windows PowerShell: `-o $null` instead of `-o NUL`.)
+Omit the URL to run only the local grader / unittest step. On Windows without Bash, run the Python commands in the table above and `scripts/validate-submission.sh` from Git Bash if available.
 
 ---
 
-## 📎 Dataset & extra tooling
+## Reference
 
-* Regenerate: `python scripts/generate_dataset.py` · Validate: `python scripts/validate_dataset.py`
-* Merge external CSV: `python scripts/merge_external_datasets.py --help`
-* Human table: `python scripts/human_eval.py --task easy --episodes 5 --seed 42`
-* JSONL/CSV: `python scripts/eval_export.py --task easy --episodes 20 --format jsonl -o results.jsonl`
-* Shell pre-check: [`scripts/validate-submission.sh`](scripts/validate-submission.sh)
+- **Manifest:** [`openenv.yaml`](openenv.yaml) — tasks, actions, observation keys.
+- **Grading:** [`tasks/graders.py`](tasks/graders.py) — `GRADERS`, `grade_episode`.
+- **Task ids and pools:** [`tasks/task_registry.py`](tasks/task_registry.py).
+- **Dataset:** [`data/scam_dataset.json`](data/scam_dataset.json); loaders in [`tasks/database.py`](tasks/database.py).
+
+**Stdout protocol** (per episode, in order): `[START]`, one or more `[STEP]`, `[END]`. On `[END]`, `score=` uses two decimal places; values stay strictly inside (0, 1). Implementation: `log_start`, `log_step`, `log_end` in [`inference.py`](inference.py).
+
+**Hackathon / judge:** use Docker + `inference.py` as above; do not hardcode private API URLs or keys for official eval. For extra checks, see [`scripts/validate-submission.sh`](scripts/validate-submission.sh) and [`scripts/hf_smoke_check.py`](scripts/hf_smoke_check.py).
+
+**Scripts:** dataset generate/validate/merge and exports live under [`scripts/`](scripts/) (`--help` on each script).
 
 ---
 
-## 🧩 Custom agent (in-process)
+## Hugging Face Space
 
-```python
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+This repo is intended to deploy as a **Docker** Space on Hugging Face (port **7860**, app from [`server/app.py`](server/app.py)). After deploy, the public URL is typically `https://<user>-<space>.hf.space`.
 
-from env.scam_env import ScamEnv
+Health check (`POST /reset` with empty JSON body):
 
-env = ScamEnv(task_id="medium", max_steps=12)
-obs, info = env.reset(seed=0)
-done = False
-while not done:
-    action = your_policy(obs)
-    obs, reward, done, step_info = env.step(action)
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" -X POST "https://YOUR-SPACE.hf.space/reset" \
+  -H "Content-Type: application/json" -d "{}"
 ```
 
-Grade with `from tasks.graders import grade_episode` then `grade_episode(env.task_id, env.action_trace, info["scenario_id"])`.
+PowerShell:
+
+```powershell
+Invoke-WebRequest -Uri "https://YOUR-SPACE.hf.space/reset" -Method POST `
+  -ContentType "application/json" -Body "{}" | Select-Object -ExpandProperty StatusCode
+```
 
 ---
 
-## 📜 License
+## License
 
 Hackathon / educational use unless otherwise specified.
