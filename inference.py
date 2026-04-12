@@ -10,7 +10,10 @@ MANDATORY for --agent llm (OpenAI client + env vars from the judge / LiteLLM pro
 Stdout (per episode), field order must match organizer sample:
   [START] task=<task_name> env=<benchmark> model=<model_name>
   [STEP]  step=<n> action=<action_str> reward=<0.00> done=<true|false> error=<msg|null>
-  [END]   success=<true|false> steps=<n> score=<0.000> rewards=<r1,r2,...>
+  [END]   success=<true|false> steps=<n> score=<0.00> rewards=<r1,r2,...>
+
+Unless --all-tasks is set, the driver runs at least three full episode blocks (each block is
+[START] ... [STEP]* ... [END]) so logs always contain three scored runs for a single --task.
 
 Stay under the ~20 minute judge cap; optional SCAM_ENV_MAX_RUNTIME_SEC (default 1140s).
 
@@ -23,6 +26,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import sys
@@ -86,7 +90,7 @@ def log_end(success: bool, steps: int, score: float, rewards: list[float]) -> No
     # Score already clamped to (0,1) open via finalize_episode_score / grade_episode.
     sc = float(score)
     print(
-        f"[END] success={str(success).lower()} steps={steps} score={sc:.3f} rewards={rewards_str}",
+        f"[END] success={str(success).lower()} steps={steps} score={sc:.2f} rewards={rewards_str}",
         flush=True,
     )
 
@@ -293,7 +297,7 @@ def run_episode_protocol(
         log_end(success=success, steps=steps_taken, score=end_score, rewards=rewards)
         sys.stdout.flush()
         if os.getenv("SCAM_ENV_DEBUG") and grader_val is not None and sid is not None:
-            print(f"[DEBUG] grader_score={grader_val:.3f} scenario={sid}", file=sys.stderr, flush=True)
+            print(f"[DEBUG] grader_score={grader_val:.2f} scenario={sid}", file=sys.stderr, flush=True)
 
 
 def main() -> None:
@@ -347,6 +351,11 @@ def main() -> None:
     else:
         task_list = [args.task]
         episodes_per = args.episodes
+
+    min_protocol_cycles = 3
+    n_tasks = len(task_list)
+    if n_tasks * episodes_per < min_protocol_cycles:
+        episodes_per = max(episodes_per, math.ceil(min_protocol_cycles / n_tasks))
 
     for task in task_list:
         if time.monotonic() - t0 > max_runtime_s:

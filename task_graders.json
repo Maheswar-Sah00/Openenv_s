@@ -1,36 +1,36 @@
 {
   "spec_version": 1,
-  "description": "Six tasks; scoring in tasks/graders.py; three entry files for unique grader paths.",
+  "description": "Six tasks; all scoring in tasks/graders.py (single module, GRADERS registry).",
   "tasks": [
     {
       "task_id": "single_turn_triage",
-      "grader_module": "tasks.grader_easy",
-      "grader_file": "tasks/grader_easy.py"
+      "grader_module": "tasks.graders",
+      "grader_file": "tasks/graders.py"
     },
     {
       "task_id": "verify_warn_chain",
-      "grader_module": "tasks.grader_medium",
-      "grader_file": "tasks/grader_medium.py"
+      "grader_module": "tasks.graders",
+      "grader_file": "tasks/graders.py"
     },
     {
       "task_id": "progressive_thread",
-      "grader_module": "tasks.grader_hard",
-      "grader_file": "tasks/grader_hard.py"
+      "grader_module": "tasks.graders",
+      "grader_file": "tasks/graders.py"
     },
     {
       "task_id": "gray_boundary",
-      "grader_module": "tasks.grader_easy",
-      "grader_file": "tasks/grader_easy.py"
+      "grader_module": "tasks.graders",
+      "grader_file": "tasks/graders.py"
     },
     {
       "task_id": "otp_kyc_pressure",
-      "grader_module": "tasks.grader_medium",
-      "grader_file": "tasks/grader_medium.py"
+      "grader_module": "tasks.graders",
+      "grader_file": "tasks/graders.py"
     },
     {
       "task_id": "link_phishing_surface",
-      "grader_module": "tasks.grader_hard",
-      "grader_file": "tasks/grader_hard.py"
+      "grader_module": "tasks.graders",
+      "grader_file": "tasks/graders.py"
     }
   ]
 }
